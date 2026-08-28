@@ -1,1 +1,630 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Roll-Boy 3000</title></head><body style="margin:0;background:#061006;color:#39ff6a;font-family:monospace"><div style="padding:20px">Loading Roll-Boy 3000...</div><script>(async()=>{const fs=['part01.txt','part02.txt','part03.txt','part04.txt','part05.txt','part06.txt','part07.txt'];const b=(await Promise.all(fs.map(f=>fetch(f).then(r=>r.text())))).join('');const u=Uint8Array.from(atob(b),c=>c.charCodeAt(0));const ds=new DecompressionStream('gzip');const t=await new Response(new Blob([u]).stream().pipeThrough(ds)).text();document.open();document.write(t);document.close();})().catch(e=>document.body.innerHTML='<pre style="color:#ff6b6b;padding:20px">Failed to load Roll-Boy 3000: '+e+'</pre>');</script></body></html>
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Roll-Boy 3000</title><style>
+:root{--BG:#061006;--PANEL:#0b1b0b;--PANEL_DARK:#071407;--PANEL_LIGHT:#102610;--GREEN:#39ff6a;--GREEN_DIM:#56ad61;--GREEN_SOFT:#a4ffa4;--YELLOW:#ffe066;--RED:#ff6b6b;--BORDER:#617561;--BLACK:#020602}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;background:var(--BG);color:var(--GREEN);font-family:Consolas,"Courier New",monospace;font-size:11px;overflow:hidden}button,select{font:inherit}button{height:24px;background:var(--PANEL_LIGHT);color:var(--GREEN);border:2px ridge #617561;border-radius:0;padding:0 10px;cursor:pointer}button:hover{background:var(--GREEN_DIM);color:var(--BLACK)}select{height:27px;background:var(--PANEL_LIGHT);color:var(--GREEN);border:2px ridge #617561;outline:0}input[type=file]{display:none}
+#app{min-width:1600px;width:100vw;height:100vh;padding:8px;display:flex;flex-direction:column;gap:8px;background:var(--BG)}
+.top{height:30px;display:flex;align-items:flex-start;gap:16px;flex:none}.title{font-size:20px;font-weight:700;line-height:28px}.subtitle{font-size:10px;font-weight:700;color:var(--GREEN_DIM);line-height:28px}.topBtns{margin-left:auto;display:flex;gap:6px}.topBtns button{min-width:64px}
+.main{flex:1;min-height:0;display:grid;grid-template-columns:458px minmax(720px,1fr) 382px;gap:7px}.panel{background:var(--PANEL);border:2px ridge var(--BORDER);padding:7px;min-width:0;min-height:0;overflow:hidden}.leftPanel,.rightPanel{display:flex;flex-direction:column}.centerPanel{display:flex;flex-direction:column}
+.section-title{font-size:15px;font-weight:700;margin:0 0 7px;color:var(--GREEN);line-height:1.1}.row{display:flex;align-items:center;gap:4px;min-height:25px;margin:1px 0}.label{width:52px;color:var(--GREEN_SOFT);font-weight:700}.label.long{width:86px}.text{flex:1;min-width:0}.statbtn{width:28px;padding:0}.valuebox,.numview{width:36px;height:23px;display:flex;align-items:center;justify-content:center;background:var(--BLACK);border:2px inset #617561;color:var(--GREEN);font-weight:700}.muted{font-size:9px;color:var(--GREEN_DIM);line-height:1.25;white-space:pre-wrap}
+.apBarWrap,.enemyBarWrap{height:16px;background:var(--BLACK);border:1px solid var(--BORDER)}.bar{height:100%}.bar.ap{background:var(--GREEN)}.bar.hp{background:var(--RED)}
+.boxtext,.targetCard,.rollText{background:var(--PANEL_DARK);color:var(--GREEN_SOFT);border:2px inset #617561;padding:5px;white-space:pre-wrap;line-height:1.2;font-size:9px;overflow:hidden}.desc{height:68px}.derived{flex:1;min-height:125px}.spellRow{display:grid;grid-template-columns:72px 1fr;gap:4px;align-items:center;margin:2px 0}.spellRow select{width:100%;font-size:9px}.spellInfo{height:42px;font-size:8.5px;line-height:1.1;margin-top:3px;overflow:auto}.equipGrid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px}.equipHdr{display:grid;grid-template-columns:66px 1fr 1fr;color:var(--GREEN_DIM);font-size:9px;margin-bottom:2px}.equipHdr span:not(:first-child){text-align:center}.equipRow{display:grid;grid-template-columns:66px 20px 25px 20px 20px 25px 20px;gap:1px;align-items:center;height:23px}.equipName{font-size:9px;white-space:nowrap;overflow:hidden}.equipRow button{width:20px;height:21px;padding:0}.equipVal{height:21px;display:flex;align-items:center;justify-content:center;background:var(--BLACK);border:1px inset #617561}.handRow{display:grid;grid-template-columns:72px 1fr;gap:4px;align-items:center;margin:2px 0}.handRow select{width:100%;font-size:9px}.weaponSummary{height:32px;margin-top:3px}.skillTop{display:flex;justify-content:space-between;align-items:center;flex:none}.skillHelp{font-size:9px;color:var(--GREEN_DIM);margin-bottom:5px}.skillList{flex:1;min-height:0;background:var(--BLACK);border:2px inset #617561;overflow:auto;font-size:10px;line-height:14px;padding:2px}.skillCat{color:var(--YELLOW);height:14px;white-space:nowrap}.skillRow{display:grid;grid-template-columns:minmax(220px,1fr) 65px 65px 60px 45px;min-height:14px;padding:0 10px;cursor:pointer;white-space:nowrap}.skillRow.active{background:var(--GREEN);color:var(--BLACK)}.skillRow span:not(:first-child){text-align:left}.skillBtns{height:32px;display:flex;align-items:flex-end;gap:5px;flex:none}.skillBtns button{min-width:50px}.skillBtns #tagBtn{margin-left:10px}.tagState{color:var(--GREEN_DIM);font-size:10px;align-self:center;margin-left:5px}
+.selectedName{font-size:14px;color:var(--GREEN_SOFT);font-weight:700;margin:5px 0}.selectedBox{height:82px}.rightPanel .section-title{margin-top:3px}.targetBtns{display:flex;gap:4px;margin:3px 0 4px}.presetRow{display:grid;grid-template-columns:72px 1fr 58px;gap:4px;align-items:center;margin:4px 0}.presetRow label{color:var(--GREEN_SOFT);font-size:9px}.presetRow select{width:100%;height:24px;font-size:9px}.presetRow button{height:24px;padding:0 7px;font-size:9px}.targetStatus{min-height:28px}.targetCard{height:60px}.enemyBarWrap{margin:3px 0}.rightPanel .resultBtns{display:flex;gap:5px;margin:6px 0}.rightPanel .resultBtns button{flex:none}.rollControl{display:flex;align-items:center;gap:4px;margin:3px 0}.rollControl .rcLabel{width:76px}.rollControl button{width:36px;padding:0}.rollControl .numview{width:38px}.unit{font-size:9px;color:var(--GREEN_DIM);margin-left:3px}
+.targetZoneCanvas{height:160px;position:relative;background:var(--BLACK);border:2px inset #617561;margin-top:3px}.zoneLinks{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}.targetZoneCanvas:before{content:'TARGET ZONE';position:absolute;top:4px;left:0;right:0;text-align:center;color:var(--GREEN);font-size:10px}.bodyFigure{position:absolute;left:50%;top:31px;width:70px;height:115px;transform:translateX(-50%)}.bodyFigure svg{width:100%;height:100%}.zone{position:absolute;width:104px;height:26px;padding:0 5px;display:flex;align-items:center;gap:8px;background:var(--PANEL_DARK);border:1px solid var(--BORDER);font-size:9px;text-align:left}.zone.active{border:2px solid var(--YELLOW);color:var(--YELLOW)}.zone .zchance{width:27px}.z-head{left:7px;top:24px}.z-eyes{left:7px;top:54px}.z-la{left:7px;top:84px}.z-ll{left:7px;top:114px}.z-torso{right:7px;top:24px}.z-ra{right:7px;top:84px}.z-rl{right:7px;top:114px}.z-groin{left:50%;transform:translateX(-50%);top:118px;width:90px;justify-content:center}.z-groin .zchance{width:auto}.zoneStatus{height:29px;margin-top:3px}.attackBtns{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;margin-top:4px}.statusLine{height:28px;margin-top:5px;background:var(--BLACK);border:2px inset #617561;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700}.statusLine.good{color:var(--GREEN)}.statusLine.bad{color:var(--RED)}.statusLine.neutral{color:var(--GREEN_DIM)}.rollText{flex:1;min-height:60px;margin-top:5px;overflow:auto}
+@media(max-width:1650px){html,body{overflow:auto}#app{width:1650px;min-width:1650px}}
+</style></head><body>
+<div id="app">
+  <div class="top"><div class="title">ROLL-BOY 3000</div><div class="subtitle">v24 BODY TARGETING / BALANCE / AP</div><div class="topBtns"><button id="resetBtn">RESET</button><button id="loadStateBtn">LOAD</button><button id="saveStateBtn">SAVE</button><input type="file" id="stateFile" accept=".json"><input type="file" id="targetFile" accept=".json"></div></div>
+  <div class="main">
+    <section class="panel leftPanel">
+      <div class="section-title">ХАРАКТЕРИСТИКИ</div>
+      <div class="row"><div class="label long">LEVEL</div><button class="statbtn" id="levelMinus">-</button><div class="numview" id="levelView"></div><button class="statbtn" id="levelPlus">+</button></div>
+      <div class="muted" id="attrTotalText"></div><div id="attrRows"></div>
+      <div class="presetRow"><label for="charPreset">PRESET</label><select id="charPreset"></select><button id="applyCharPresetBtn">APPLY</button></div>
+      <div class="section-title" style="margin-top:7px">AP / ЭНЕРГИЯ</div><div class="muted" id="apStatus"></div><div class="apBarWrap"><div class="bar ap" id="apBar"></div></div>
+      <div class="section-title" style="margin-top:9px">СПЕЛЛЫ</div><div class="spellRow"><span>Школа</span><select id="spellSchool"></select></div><div class="spellRow"><span>Спелл</span><select id="spellSelect"></select></div><div class="boxtext spellInfo" id="spellInfo"></div><div id="descBox" style="display:none"></div>
+      <div class="section-title" style="margin-top:10px">ЭКИПИРОВКА / ЗАЩИТА</div><div class="muted" id="equipSummary"></div><div class="equipGrid" id="equipGrid"></div>
+      <div class="section-title">ОРУЖИЕ / РУКИ</div><div class="handRow"><span>Правая</span><select id="rightHand"></select></div><div class="handRow"><span>Левая</span><select id="leftHand"></select></div><div class="boxtext weaponSummary" id="weaponHint"></div>
+      <div class="section-title" style="margin-top:9px">ПАРАМЕТРЫ</div><div class="boxtext derived" id="derivedBox"></div>
+    </section>
+    <section class="panel centerPanel">
+      <div class="skillTop"><div class="section-title">НАВЫКИ</div><div class="muted" id="skillPointsText"></div></div><div class="skillHelp">Выделите навык в списке и распределяйте очки. Максимум навыка: 100%. Магический конфликт: 100%, без настроек.</div><div class="skillList" id="skillList"></div><div class="skillBtns"><button data-sdelta="-10">-10</button><button data-sdelta="-5">-5</button><button data-sdelta="-1">-1</button><button data-sdelta="1">+1</button><button data-sdelta="5">+5</button><button data-sdelta="10">+10</button><button id="tagBtn">TAG</button><div class="tagState" id="tagInfo"></div></div>
+    </section>
+    <section class="panel rightPanel">
+      <div class="section-title">ВЫБРАННЫЙ НАВЫК</div><div class="selectedName" id="selectedNameDisplay">Кинжалы</div><div class="boxtext selectedBox" id="selectedSkillBox"></div>
+      <div class="section-title" style="margin-top:10px">ЦЕЛЬ / SAVED CHARACTER</div><div class="targetBtns"><button id="loadTargetBtn">LOAD TARGET</button><button id="clearTargetBtn">CLEAR</button></div><div class="presetRow"><label for="targetPreset">PRESET</label><select id="targetPreset"></select><button id="applyTargetPresetBtn">LOAD</button></div><div class="muted targetStatus" id="targetStatus">Цель не загружена.</div><div class="targetCard" id="targetDefenseBox"></div>
+      <div class="section-title" style="color:var(--RED);margin-top:9px">ENEMY HP</div><div class="muted" id="enemyHpStatus"></div><div class="enemyBarWrap"><div class="bar hp" id="enemyHpBar"></div></div><div class="resultBtns"><button id="resetTargetHpBtn">RESET TARGET HP</button></div>
+      <div class="section-title" style="margin-top:7px">БРОСОК D100</div><div class="rollControl"><div class="rcLabel">Сложность</div><button id="diffM10">-10</button><button id="diffM1">-1</button><div class="numview" id="difficultyView"></div><button id="diffP1">+1</button><button id="diffP10">+10</button></div><div class="rollControl"><div class="rcLabel">Дистанция</div><button id="distM10">-10</button><button id="distM1">-1</button><div class="numview" id="distanceView"></div><button id="distP1">+1</button><button id="distP10">+10</button><span class="unit">ярдов</span></div>
+      <div class="section-title" style="margin-top:8px">TARGET ZONE / AIMED SHOT</div><div class="targetZoneCanvas" id="zoneCanvas"><svg class="zoneLinks" viewBox="0 0 364 160" preserveAspectRatio="none"><g stroke="#39ff6a" stroke-width="1" fill="none" opacity=".85"><path d="M111 37 L150 37 L169 55"/><path d="M111 67 L146 67 L169 62"/><path d="M111 97 L145 97 L169 75"/><path d="M111 127 L145 127 L173 98"/><path d="M253 37 L214 37 L195 55"/><path d="M253 97 L219 97 L195 75"/><path d="M253 127 L219 127 L191 98"/><path d="M182 144 L182 122 L182 92"/></g></svg><div class="bodyFigure"><svg viewBox="0 0 80 120" fill="none" stroke="#39ff6a" stroke-width="1.4"><circle cx="40" cy="13" r="9"/><path d="M40 22v42M25 37h30M25 37L18 65M55 37l7 28M40 64l-15 43M40 64l15 43M29 31l11 13 11-13M27 53h26M28 61h24"/></svg></div></div><div class="muted zoneStatus" id="zoneStatus"></div>
+      <div class="attackBtns"><button id="attackBtn">ATTACK</button><button id="rollMagicBtn">ROLL MAGIC</button><button id="rollSkillBtn">ROLL SKILL</button></div><div class="statusLine neutral" id="statusLine">STATUS: —</div><div class="rollText" id="rollText"></div>
+    </section>
+  </div>
+</div>
+<script>
+const DATA = {"attrs":[{"key":"strength","short":"ST","full":"СИЛА","desc":"Физический урон, тяжёлое оружие, пробитие брони."},{"key":"agility","short":"AG","full":"ЛОВКОСТЬ","desc":"Уклонение, AP-реген, основа скрытности, воровство."},{"key":"intellect","short":"IN","full":"ИНТЕЛЛЕКТ","desc":"Очки навыков, тактика скрытности, утилитарные проверки, инженерия, Arcane."},{"key":"spirit","short":"SP","full":"ДУХ","desc":"Магическая защита, выживание, Holy/Nature/Spirit, воля."},{"key":"stamina","short":"EN","full":"ВЫНОСЛИВОСТЬ","desc":"HP, броня, устойчивость, переносимость тяжёлой брони."}],"equip_slots":[{"key":"head","name":"Голова"},{"key":"shoulders","name":"Плечи"},{"key":"chest","name":"Грудь"},{"key":"hands","name":"Кисти"},{"key":"legs","name":"Ноги"},{"key":"feet","name":"Ступни"},{"key":"back","name":"Плащ"},{"key":"offhand","name":"Щит/оффхенд"},{"key":"trinket1","name":"Аксессуар 1"},{"key":"trinket2","name":"Аксессуар 2"}],"weapons":[{"key":"none","name":"Пустая рука","skill":null,"hands":0,"range_kind":"none","reach":0,"optimal":0,"max_range":0,"range_penalty":0,"damage":0,"ap":0,"accuracy":0,"dual":false,"damage_min":0,"damage_max":0},{"key":"cheap_dagger","name":"Дешёвый кинжал","skill":"daggers","hands":1,"range_kind":"melee","reach":1,"optimal":0,"max_range":1,"range_penalty":0,"damage":10,"ap":-10,"accuracy":0,"dual":true,"damage_min":8,"damage_max":13},{"key":"balanced_dagger","name":"Хороший кинжал","skill":"daggers","hands":1,"range_kind":"melee","reach":1,"optimal":0,"max_range":1,"range_penalty":0,"damage":14,"ap":-5,"accuracy":5,"dual":true,"damage_min":11,"damage_max":17},{"key":"expensive_dagger","name":"Дорогой кинжал","skill":"daggers","hands":1,"range_kind":"melee","reach":1,"optimal":0,"max_range":1,"range_penalty":0,"damage":17,"ap":0,"accuracy":5,"dual":true,"damage_min":14,"damage_max":20},{"key":"cheap_sword","name":"Дешёвый меч","skill":"one_handed_swords","hands":1,"range_kind":"melee","reach":1,"optimal":0,"max_range":1,"range_penalty":0,"damage":13,"ap":0,"accuracy":0,"dual":true,"damage_min":10,"damage_max":16},{"key":"soldier_sword","name":"Солдатский меч","skill":"one_handed_swords","hands":1,"range_kind":"melee","reach":1,"optimal":0,"max_range":1,"range_penalty":0,"damage":18,"ap":0,"accuracy":5,"dual":true,"damage_min":14,"damage_max":21},{"key":"expensive_sword","name":"Дорогой меч","skill":"one_handed_swords","hands":1,"range_kind":"melee","reach":2,"optimal":0,"max_range":2,"range_penalty":0,"damage":22,"ap":2,"accuracy":5,"dual":true,"damage_min":18,"damage_max":26},{"key":"rusty_greatsword","name":"Ржавый двуручный меч","skill":"two_handed_swords","hands":2,"range_kind":"melee","reach":2,"optimal":0,"max_range":2,"range_penalty":0,"damage":25,"ap":5,"accuracy":-5,"dual":false,"damage_min":20,"damage_max":30},{"key":"knight_greatsword","name":"Рыцарский двуручный меч","skill":"two_handed_swords","hands":2,"range_kind":"melee","reach":3,"optimal":0,"max_range":3,"range_penalty":0,"damage":30,"ap":8,"accuracy":0,"dual":false,"damage_min":25,"damage_max":36},{"key":"cheap_hand_axe","name":"Дешёвый одноручный топор","skill":"one_handed_axes","hands":1,"range_kind":"melee","reach":1,"optimal":0,"max_range":1,"range_penalty":0,"damage":15,"ap":3,"accuracy":-5,"dual":true,"damage_min":12,"damage_max":18},{"key":"orc_hand_axe","name":"Орочий ручной топор","skill":"one_handed_axes","hands":1,"range_kind":"melee","reach":1,"optimal":0,"max_range":1,"range_penalty":0,"damage":20,"ap":5,"accuracy":0,"dual":true,"damage_min":16,"damage_max":24},{"key":"expensive_hand_axe","name":"Дорогой одноручный топор","skill":"one_handed_axes","hands":1,"range_kind":"melee","reach":2,"optimal":0,"max_range":2,"range_penalty":0,"damage":23,"ap":7,"accuracy":0,"dual":true,"damage_min":19,"damage_max":27},{"key":"lumber_greataxe","name":"Тяжёлый двуручный топор","skill":"two_handed_axes","hands":2,"range_kind":"melee","reach":2,"optimal":0,"max_range":2,"range_penalty":0,"damage":29,"ap":10,"accuracy":-5,"dual":false,"damage_min":24,"damage_max":34},{"key":"war_greataxe","name":"Боевая секира","skill":"two_handed_axes","hands":2,"range_kind":"melee","reach":3,"optimal":0,"max_range":3,"range_penalty":0,"damage":34,"ap":12,"accuracy":-5,"dual":false,"damage_min":28,"damage_max":40},{"key":"club","name":"Дубина","skill":"one_handed_maces","hands":1,"range_kind":"melee","reach":1,"optimal":0,"max_range":1,"range_penalty":0,"damage":12,"ap":5,"accuracy":0,"dual":true,"damage_min":9,"damage_max":15},{"key":"iron_mace","name":"Железная булава","skill":"one_handed_maces","hands":1,"range_kind":"melee","reach":1,"optimal":0,"max_range":1,"range_penalty":0,"damage":18,"ap":10,"accuracy":-5,"dual":true,"damage_min":15,"damage_max":22},{"key":"expensive_mace","name":"Дорогая булава","skill":"one_handed_maces","hands":1,"range_kind":"melee","reach":2,"optimal":0,"max_range":2,"range_penalty":0,"damage":23,"ap":12,"accuracy":0,"dual":true,"damage_min":19,"damage_max":27},{"key":"sledgehammer","name":"Кувалда","skill":"two_handed_maces","hands":2,"range_kind":"melee","reach":2,"optimal":0,"max_range":2,"range_penalty":0,"damage":30,"ap":15,"accuracy":-10,"dual":false,"damage_min":24,"damage_max":36},{"key":"warhammer","name":"Боевой молот","skill":"two_handed_maces","hands":2,"range_kind":"melee","reach":3,"optimal":0,"max_range":3,"range_penalty":0,"damage":36,"ap":18,"accuracy":-5,"dual":false,"damage_min":30,"damage_max":42},{"key":"militia_spear","name":"Ополченское копьё","skill":"polearms","hands":2,"range_kind":"melee","reach":3,"optimal":0,"max_range":3,"range_penalty":0,"damage":20,"ap":5,"accuracy":0,"dual":false,"damage_min":16,"damage_max":24},{"key":"halberd","name":"Алебарда","skill":"polearms","hands":2,"range_kind":"melee","reach":4,"optimal":0,"max_range":4,"range_penalty":0,"damage":30,"ap":10,"accuracy":-5,"dual":false,"damage_min":25,"damage_max":36},{"key":"cheap_staff","name":"Дешёвый посох","skill":"staves","hands":2,"range_kind":"melee","reach":2,"optimal":0,"max_range":2,"range_penalty":0,"damage":14,"ap":-5,"accuracy":0,"dual":false,"damage_min":10,"damage_max":17},{"key":"war_staff","name":"Боевой посох","skill":"staves","hands":2,"range_kind":"melee","reach":3,"optimal":0,"max_range":3,"range_penalty":0,"damage":20,"ap":0,"accuracy":5,"dual":false,"damage_min":16,"damage_max":24},{"key":"cheap_knuckles","name":"Дешёвый кастет","skill":"fist_weapons","hands":1,"range_kind":"melee","reach":1,"optimal":0,"max_range":1,"range_penalty":0,"damage":10,"ap":-10,"accuracy":5,"dual":true,"damage_min":7,"damage_max":12},{"key":"claw_weapon","name":"Кистевой коготь","skill":"fist_weapons","hands":1,"range_kind":"melee","reach":1,"optimal":0,"max_range":1,"range_penalty":0,"damage":15,"ap":-5,"accuracy":5,"dual":true,"damage_min":12,"damage_max":18},{"key":"apprentice_wand","name":"Ученический жезл","skill":"wands","hands":2,"range_kind":"ranged","reach":0,"optimal":20,"max_range":40,"range_penalty":1,"damage":13,"ap":0,"accuracy":0,"dual":false,"damage_min":10,"damage_max":16},{"key":"expensive_wand","name":"Дорогой жезл","skill":"wands","hands":2,"range_kind":"ranged","reach":0,"optimal":30,"max_range":60,"range_penalty":1,"damage":20,"ap":2,"accuracy":5,"dual":false,"damage_min":16,"damage_max":24},{"key":"short_bow","name":"Короткий лук","skill":"bows","hands":2,"range_kind":"ranged","reach":0,"optimal":25,"max_range":60,"range_penalty":1,"damage":16,"ap":-5,"accuracy":5,"dual":false,"damage_min":13,"damage_max":20},{"key":"war_bow","name":"Боевой лук","skill":"bows","hands":2,"range_kind":"ranged","reach":0,"optimal":35,"max_range":80,"range_penalty":1,"damage":21,"ap":0,"accuracy":0,"dual":false,"damage_min":17,"damage_max":25},{"key":"longbow","name":"Длинный лук","skill":"bows","hands":2,"range_kind":"ranged","reach":0,"optimal":45,"max_range":100,"range_penalty":1,"damage":25,"ap":0,"accuracy":-5,"dual":false,"damage_min":20,"damage_max":30},{"key":"cheap_musket","name":"Дешёвый мушкет","skill":"guns","hands":2,"range_kind":"ranged","reach":0,"optimal":35,"max_range":80,"range_penalty":1,"damage":26,"ap":10,"accuracy":-5,"dual":false,"damage_min":21,"damage_max":32},{"key":"dwarven_rifle","name":"Дворфийская винтовка","skill":"guns","hands":2,"range_kind":"ranged","reach":0,"optimal":45,"max_range":110,"range_penalty":1,"damage":30,"ap":12,"accuracy":0,"dual":false,"damage_min":25,"damage_max":36},{"key":"light_crossbow","name":"Лёгкий арбалет","skill":"crossbows","hands":2,"range_kind":"ranged","reach":0,"optimal":30,"max_range":70,"range_penalty":1,"damage":22,"ap":8,"accuracy":0,"dual":false,"damage_min":18,"damage_max":27},{"key":"heavy_crossbow","name":"Тяжёлый арбалет","skill":"crossbows","hands":2,"range_kind":"ranged","reach":0,"optimal":45,"max_range":100,"range_penalty":1,"damage":32,"ap":15,"accuracy":-5,"dual":false,"damage_min":25,"damage_max":38},{"key":"throwing_knife","name":"Метательный нож","skill":"thrown_weapons","hands":1,"range_kind":"ranged","reach":0,"optimal":5,"max_range":15,"range_penalty":2,"damage":11,"ap":-5,"accuracy":5,"dual":false,"damage_min":8,"damage_max":14},{"key":"throwing_axe","name":"Метательный топор","skill":"thrown_weapons","hands":1,"range_kind":"ranged","reach":0,"optimal":8,"max_range":20,"range_penalty":2,"damage":17,"ap":0,"accuracy":0,"dual":false,"damage_min":13,"damage_max":21},{"key":"javelin","name":"Дротик / джевелин","skill":"thrown_weapons","hands":1,"range_kind":"ranged","reach":0,"optimal":10,"max_range":25,"range_penalty":2,"damage":20,"ap":5,"accuracy":-5,"dual":false,"damage_min":16,"damage_max":24},{"key":"crude_bomb","name":"Грубая бомба","skill":"explosives","hands":2,"range_kind":"ranged","reach":0,"optimal":8,"max_range":20,"range_penalty":2,"damage":35,"ap":20,"accuracy":-5,"dual":false,"damage_min":28,"damage_max":42},{"key":"goblin_grenade","name":"Гоблинская граната","skill":"explosives","hands":2,"range_kind":"ranged","reach":0,"optimal":12,"max_range":30,"range_penalty":2,"damage":40,"ap":25,"accuracy":0,"dual":false,"damage_min":32,"damage_max":48},{"key":"unarmed_virtual","name":"Голые руки","skill":"unarmed","hands":0,"range_kind":"melee","reach":1,"optimal":0,"max_range":1,"range_penalty":0,"damage":1,"ap":-15,"accuracy":0,"dual":false,"damage_min":1,"damage_max":3}],"body_targets":[{"key":"head","name":"Head","hit_mod":-30,"damage_mult":1.15,"crit_bonus":10,"crit_damage_mult":1.25,"note":"Hard target. Better crit chance and stronger crits."},{"key":"eyes","name":"Eyes","hit_mod":-50,"damage_mult":1.25,"crit_bonus":15,"crit_damage_mult":1.5,"note":"Very hard target. Fallout-style high-risk critical shot."},{"key":"right_arm","name":"Right Arm","hit_mod":-20,"damage_mult":0.75,"crit_bonus":5,"crit_damage_mult":1.1,"note":"Limb shot. Lower damage, better chance to disable weapon arm on crit."},{"key":"left_arm","name":"Left Arm","hit_mod":-20,"damage_mult":0.75,"crit_bonus":5,"crit_damage_mult":1.1,"note":"Limb shot. Lower damage, better chance to disable off-hand on crit."},{"key":"torso","name":"Torso","hit_mod":0,"damage_mult":1.0,"crit_bonus":0,"crit_damage_mult":1.0,"note":"Default shot. No aimed-shot penalty."},{"key":"groin","name":"Groin","hit_mod":-30,"damage_mult":1.05,"crit_bonus":5,"crit_damage_mult":1.2,"note":"Hard target. Pain/stun flavor on crit."},{"key":"right_leg","name":"Right Leg","hit_mod":-20,"damage_mult":0.85,"crit_bonus":3,"crit_damage_mult":1.1,"note":"Limb shot. Lower damage, movement/knockdown flavor on crit."},{"key":"left_leg","name":"Left Leg","hit_mod":-20,"damage_mult":0.85,"crit_bonus":3,"crit_damage_mult":1.1,"note":"Limb shot. Lower damage, movement/knockdown flavor on crit."}],"skills":[{"key":"daggers","name":"Кинжалы","cat":"ОРУЖИЕ","desc":"Кинжалы, скрытые клинки, быстрые удары, атаки из засады.","formula":"10 + A*4"},{"key":"one_handed_swords","name":"Одноручные мечи","cat":"ОРУЖИЕ","desc":"Короткие и длинные одноручные мечи, сабли, офицерские клинки.","formula":"10 + A*2 + S*2"},{"key":"two_handed_swords","name":"Двуручные мечи","cat":"ОРУЖИЕ","desc":"Большие мечи, клейморы, паладинские и рыцарские клинки.","formula":"5 + S*3 + A"},{"key":"one_handed_axes","name":"Одноручные топоры","cat":"ОРУЖИЕ","desc":"Боевые топоры, рубящие удары, орочий и дворфийский стиль.","formula":"10 + S*3 + A"},{"key":"two_handed_axes","name":"Двуручные топоры","cat":"ОРУЖИЕ","desc":"Большие секиры, тяжёлые рубящие удары, пробивание брони.","formula":"5 + S*4"},{"key":"one_handed_maces","name":"Одноручные булавы","cat":"ОРУЖИЕ","desc":"Булавы, молоты, дубины, дробящие удары одной рукой.","formula":"10 + S*2 + E + A"},{"key":"two_handed_maces","name":"Двуручные булавы","cat":"ОРУЖИЕ","desc":"Боевые молоты, кувалды, тяжёлое дробящее оружие.","formula":"5 + S*3 + E"},{"key":"polearms","name":"Древковое оружие","cat":"ОРУЖИЕ","desc":"Алебарды, копья, глефы, пики, оружие с большим радиусом.","formula":"5 + S*2 + A*2"},{"key":"staves","name":"Посохи","cat":"ОРУЖИЕ","desc":"Боевые и магические посохи, монашеский и кастерский стиль.","formula":"10 + A*2 + P + I"},{"key":"fist_weapons","name":"Кистевое оружие","cat":"ОРУЖИЕ","desc":"Кастеты, когти, кулачные клинки, звериный ближний бой.","formula":"10 + A*3 + S"},{"key":"wands","name":"Жезлы","cat":"ОРУЖИЕ","desc":"Магические жезлы, фокусированная дальняя магическая атака.","formula":"10 + I*3 + P"},{"key":"bows","name":"Луки","cat":"ОРУЖИЕ","desc":"Охотничьи и боевые луки, точность, дистанция, засады.","formula":"10 + A*3 + P"},{"key":"guns","name":"Ружья","cat":"ОРУЖИЕ","desc":"Дворфийские, гномские и инженерные огнестрельные ружья.","formula":"10 + A*2 + I + S"},{"key":"crossbows","name":"Арбалеты","cat":"ОРУЖИЕ","desc":"Арбалеты, тяжёлые болты, бронебойный дальний выстрел.","formula":"10 + A*2 + S + I"},{"key":"thrown_weapons","name":"Метательное оружие","cat":"ОРУЖИЕ","desc":"Метательные ножи, топоры, дротики, сюрикены, ручные снаряды.","formula":"10 + A*3 + S"},{"key":"unarmed","name":"Рукопашный бой","cat":"БОЙ","desc":"Кулаки, когти, звериная атака, монашеские удары.","formula":"15 + S*2 + A*2"},{"key":"explosives","name":"Взрывчатка","cat":"БОЙ","desc":"Гранаты, бомбы, мины, инженерные и алхимические заряды.","formula":"5 + A*2 + I*2"},{"key":"stealth","name":"Скрытность","cat":"БОЙ","desc":"Стелс, засады, скрытое перемещение. Ловкость — основа, интеллект помогает выбирать маршрут и укрытия.","formula":"10 + A*3 + I"},{"key":"lockpick","name":"Взлом","cat":"НАВЫКИ","desc":"Замки, ловушки, сундуки, двери, простые механизмы. Только вблизи.","formula":"5 + A*2 + I*2"},{"key":"stealing","name":"Воровство","cat":"НАВЫКИ","desc":"Карманная кража, срезание кошелька, незаметное изъятие предмета. Только вблизи.","formula":"5 + A*3 + I"},{"key":"engineering","name":"Ремонт / инженерия","cat":"НАВЫКИ","desc":"Гномская/гоблинская техника, турели, механизмы, ремонт.","formula":"5 + I*4"},{"key":"alchemy_medicine","name":"Медицина / алхимия","cat":"НАВЫКИ","desc":"Бинты, зелья, яды, антидоты, полевая медицина.","formula":"5 + I*2 + P*2"},{"key":"survival","name":"Выживание","cat":"НАВЫКИ","desc":"Охота, лагерь, следопытство, природная среда. Основа: дух.","formula":"P*8"},{"key":"holy","name":"Holy","cat":"МАГИЯ","desc":"Holy: healing, cleansing, shields, anti-undead / anti-Void magic.","formula":"5 + P*4 + I"},{"key":"void","name":"Void","cat":"МАГИЯ","desc":"Void: fear, whispers, mind attacks, darkness.","formula":"5 + I*3 + P"},{"key":"nature","name":"Nature","cat":"МАГИЯ","desc":"Nature: plants, beasts, restoration, druidic magic.","formula":"5 + P*2 + I + E"},{"key":"necromancy","name":"Necromancy","cat":"МАГИЯ","desc":"Necromancy / Death: undead, bones, souls, plague, deathly cold.","formula":"5 + I*3 + E"},{"key":"arcane","name":"Arcane","cat":"МАГИЯ","desc":"Arcane / Order: runes, portals, barriers, structured magic.","formula":"5 + I*4"},{"key":"fel","name":"Fel","cat":"МАГИЯ","desc":"Fel / Disorder: demons, chaos, burning life, destruction.","formula":"5 + I*2 + P + E"},{"key":"spirit_magic","name":"Spirit","cat":"МАГИЯ","desc":"Spirit: shamanic harmony, elemental pact, willpower.","formula":"5 + P*4"},{"key":"decay","name":"Decay","cat":"МАГИЯ","desc":"Decay: dark shamanism, forced elements, rot and corruption.","formula":"5 + I*2 + P + E"}],"conflict":{"holy":{"void":1.0,"necromancy":0.75,"fel":0.75,"decay":0.5},"void":{"holy":1.0,"nature":0.25,"spirit_magic":0.25},"nature":{"void":0.25,"necromancy":1.0,"fel":0.5,"decay":0.5},"necromancy":{"holy":0.75,"nature":1.0,"spirit_magic":0.5},"arcane":{},"fel":{"holy":0.75,"nature":0.5,"spirit_magic":0.25},"spirit_magic":{"void":0.25,"necromancy":0.5,"fel":0.25,"decay":1.0},"decay":{"holy":0.5,"nature":0.5,"spirit_magic":1.0}},"presets":{"warrior":{"version":"24-body-targeting","preset_name":"Воин","notes":"ROLLBOY v23 preset: level 7 armored melee fighter. 150 HP as target. Stats balance: fixed AP max, AG regen/dodge nerf, armor dodge penalty.","level":7,"difficulty":0,"distance":0,"attributes":{"strength":9,"agility":5,"intellect":3,"spirit":3,"stamina":10},"equipment":{"physical":{"head":3,"shoulders":3,"chest":6,"hands":2,"legs":5,"feet":2,"back":1,"offhand":0,"trinket1":1,"trinket2":1},"magic":{"head":0,"shoulders":0,"chest":1,"hands":0,"legs":1,"feet":0,"back":0,"offhand":0,"trinket1":0,"trinket2":0}},"invested":{"daggers":0,"one_handed_swords":2,"two_handed_swords":10,"one_handed_axes":0,"two_handed_axes":0,"one_handed_maces":2,"two_handed_maces":0,"polearms":0,"staves":0,"fist_weapons":0,"wands":0,"bows":0,"guns":0,"crossbows":0,"thrown_weapons":0,"unarmed":0,"explosives":0,"stealth":0,"lockpick":0,"stealing":0,"engineering":0,"alchemy_medicine":0,"survival":0,"holy":0,"void":0,"nature":0,"necromancy":0,"arcane":0,"fel":0,"spirit_magic":0,"decay":0},"tags":{"daggers":false,"one_handed_swords":true,"two_handed_swords":true,"one_handed_axes":false,"two_handed_axes":false,"one_handed_maces":true,"two_handed_maces":false,"polearms":false,"staves":false,"fist_weapons":false,"wands":false,"bows":false,"guns":false,"crossbows":false,"thrown_weapons":false,"unarmed":false,"explosives":false,"stealth":false,"lockpick":false,"stealing":false,"engineering":false,"alchemy_medicine":false,"survival":false,"holy":false,"void":false,"nature":false,"necromancy":false,"arcane":false,"fel":false,"spirit_magic":false,"decay":false},"selected_skill":"survival","hands":{"right":"knight_greatsword","left":"none"},"selected_body_zone":"torso"},"archer":{"version":"24-body-targeting","preset_name":"Лучник","notes":"ROLLBOY v23 preset: level 10 ranged fighter. 120 HP as target. Stats balance: fixed AP max, AG regen/dodge nerf, armor dodge penalty.","level":10,"difficulty":0,"distance":20,"attributes":{"strength":4,"agility":9,"intellect":4,"spirit":6,"stamina":7},"equipment":{"physical":{"head":1,"shoulders":1,"chest":2,"hands":1,"legs":2,"feet":1,"back":1,"offhand":0,"trinket1":0,"trinket2":0},"magic":{"head":0,"shoulders":0,"chest":0,"hands":0,"legs":0,"feet":0,"back":1,"offhand":0,"trinket1":0,"trinket2":0}},"invested":{"daggers":0,"one_handed_swords":0,"two_handed_swords":0,"one_handed_axes":0,"two_handed_axes":0,"one_handed_maces":0,"two_handed_maces":0,"polearms":0,"staves":0,"fist_weapons":0,"wands":0,"bows":20,"guns":0,"crossbows":0,"thrown_weapons":0,"unarmed":0,"explosives":0,"stealth":5,"lockpick":0,"stealing":0,"engineering":0,"alchemy_medicine":0,"survival":5,"holy":0,"void":0,"nature":0,"necromancy":0,"arcane":0,"fel":0,"spirit_magic":0,"decay":0},"tags":{"daggers":false,"one_handed_swords":false,"two_handed_swords":false,"one_handed_axes":false,"two_handed_axes":false,"one_handed_maces":false,"two_handed_maces":false,"polearms":false,"staves":false,"fist_weapons":false,"wands":false,"bows":true,"guns":false,"crossbows":false,"thrown_weapons":false,"unarmed":false,"explosives":false,"stealth":true,"lockpick":false,"stealing":false,"engineering":false,"alchemy_medicine":false,"survival":true,"holy":false,"void":false,"nature":false,"necromancy":false,"arcane":false,"fel":false,"spirit_magic":false,"decay":false},"selected_skill":"stealth","hands":{"right":"longbow","left":"none"},"selected_body_zone":"torso"},"mage":{"version":"24-body-targeting","preset_name":"Маг","notes":"ROLLBOY v23 preset: level 10 arcane/holy caster. 100 HP as target. Stats balance: fixed AP max, AG regen/dodge nerf, armor dodge penalty.","level":10,"difficulty":0,"distance":30,"attributes":{"strength":2,"agility":4,"intellect":10,"spirit":9,"stamina":5},"equipment":{"physical":{"head":0,"shoulders":0,"chest":1,"hands":0,"legs":1,"feet":0,"back":0,"offhand":0,"trinket1":0,"trinket2":0},"magic":{"head":3,"shoulders":2,"chest":5,"hands":2,"legs":3,"feet":1,"back":3,"offhand":0,"trinket1":2,"trinket2":2}},"invested":{"daggers":0,"one_handed_swords":0,"two_handed_swords":0,"one_handed_axes":0,"two_handed_axes":0,"one_handed_maces":0,"two_handed_maces":0,"polearms":0,"staves":0,"fist_weapons":0,"wands":5,"bows":0,"guns":0,"crossbows":0,"thrown_weapons":0,"unarmed":0,"explosives":0,"stealth":0,"lockpick":0,"stealing":0,"engineering":0,"alchemy_medicine":5,"survival":0,"holy":8,"void":0,"nature":0,"necromancy":0,"arcane":22,"fel":0,"spirit_magic":0,"decay":0},"tags":{"daggers":false,"one_handed_swords":false,"two_handed_swords":false,"one_handed_axes":false,"two_handed_axes":false,"one_handed_maces":false,"two_handed_maces":false,"polearms":false,"staves":false,"fist_weapons":false,"wands":false,"bows":false,"guns":false,"crossbows":false,"thrown_weapons":false,"unarmed":false,"explosives":false,"stealth":false,"lockpick":false,"stealing":false,"engineering":false,"alchemy_medicine":true,"survival":false,"holy":true,"void":false,"nature":false,"necromancy":false,"arcane":true,"fel":false,"spirit_magic":false,"decay":false},"selected_skill":"arcane","hands":{"right":"expensive_wand","left":"none"},"selected_body_zone":"torso"},"ogre":{"version":"24-body-targeting","preset_name":"Огр","notes":"ROLLBOY v23 preset: level 15 brute with heavy two-handed mace. 150 HP as target. Stats balance: fixed AP max, AG regen/dodge nerf, armor dodge penalty.","level":15,"difficulty":0,"distance":0,"attributes":{"strength":10,"agility":3,"intellect":2,"spirit":5,"stamina":10},"equipment":{"physical":{"head":1,"shoulders":2,"chest":4,"hands":2,"legs":3,"feet":1,"back":0,"offhand":0,"trinket1":0,"trinket2":0},"magic":{"head":0,"shoulders":0,"chest":0,"hands":0,"legs":0,"feet":0,"back":0,"offhand":0,"trinket1":0,"trinket2":0}},"invested":{"daggers":0,"one_handed_swords":0,"two_handed_swords":0,"one_handed_axes":0,"two_handed_axes":0,"one_handed_maces":0,"two_handed_maces":22,"polearms":0,"staves":0,"fist_weapons":0,"wands":0,"bows":0,"guns":0,"crossbows":0,"thrown_weapons":0,"unarmed":5,"explosives":0,"stealth":0,"lockpick":0,"stealing":0,"engineering":0,"alchemy_medicine":0,"survival":3,"holy":0,"void":0,"nature":0,"necromancy":0,"arcane":0,"fel":0,"spirit_magic":0,"decay":0},"tags":{"daggers":false,"one_handed_swords":false,"two_handed_swords":false,"one_handed_axes":false,"two_handed_axes":false,"one_handed_maces":false,"two_handed_maces":true,"polearms":false,"staves":false,"fist_weapons":false,"wands":false,"bows":false,"guns":false,"crossbows":false,"thrown_weapons":false,"unarmed":true,"explosives":false,"stealth":false,"lockpick":false,"stealing":false,"engineering":false,"alchemy_medicine":false,"survival":true,"holy":false,"void":false,"nature":false,"necromancy":false,"arcane":false,"fel":false,"spirit_magic":false,"decay":false},"selected_skill":"unarmed","hands":{"right":"warhammer","left":"none"},"selected_body_zone":"torso"},"dog":{"version":"24-body-targeting","preset_name":"Собака","notes":"ROLLBOY v23 preset: low-level fast animal target. Level 2, 110 HP as target. Stats balance: fixed AP max, AG regen/dodge nerf, armor dodge penalty.","level":2,"difficulty":0,"distance":0,"attributes":{"strength":5,"agility":10,"intellect":1,"spirit":8,"stamina":6},"equipment":{"physical":{"head":0,"shoulders":0,"chest":0,"hands":0,"legs":0,"feet":0,"back":0,"offhand":0,"trinket1":0,"trinket2":0},"magic":{"head":0,"shoulders":0,"chest":0,"hands":0,"legs":0,"feet":0,"back":0,"offhand":0,"trinket1":0,"trinket2":0}},"invested":{"daggers":0,"one_handed_swords":0,"two_handed_swords":0,"one_handed_axes":0,"two_handed_axes":0,"one_handed_maces":0,"two_handed_maces":0,"polearms":0,"staves":0,"fist_weapons":0,"wands":0,"bows":0,"guns":0,"crossbows":0,"thrown_weapons":0,"unarmed":3,"explosives":0,"stealth":0,"lockpick":0,"stealing":0,"engineering":0,"alchemy_medicine":0,"survival":1,"holy":0,"void":0,"nature":0,"necromancy":0,"arcane":0,"fel":0,"spirit_magic":0,"decay":0},"tags":{"daggers":false,"one_handed_swords":false,"two_handed_swords":false,"one_handed_axes":false,"two_handed_axes":false,"one_handed_maces":false,"two_handed_maces":false,"polearms":false,"staves":false,"fist_weapons":false,"wands":false,"bows":false,"guns":false,"crossbows":false,"thrown_weapons":false,"unarmed":true,"explosives":false,"stealth":true,"lockpick":false,"stealing":false,"engineering":false,"alchemy_medicine":false,"survival":true,"holy":false,"void":false,"nature":false,"necromancy":false,"arcane":false,"fel":false,"spirit_magic":false,"decay":false},"selected_skill":"unarmed","hands":{"right":"none","left":"none"},"selected_body_zone":"torso"},"rogue":{"version":"24-body-targeting","level":5,"difficulty":0,"distance":0,"attributes":{"strength":2,"agility":10,"intellect":6,"spirit":4,"stamina":8},"equipment":{"physical":{"head":1,"shoulders":1,"chest":2,"hands":1,"legs":2,"feet":1,"back":1,"offhand":0,"trinket1":0,"trinket2":0},"magic":{"head":0,"shoulders":1,"chest":1,"hands":0,"legs":1,"feet":0,"back":0,"offhand":0,"trinket1":0,"trinket2":0}},"invested":{"daggers":10,"one_handed_swords":0,"two_handed_swords":0,"one_handed_axes":0,"two_handed_axes":0,"one_handed_maces":0,"two_handed_maces":0,"polearms":0,"staves":0,"fist_weapons":0,"wands":0,"bows":0,"guns":0,"crossbows":0,"thrown_weapons":0,"unarmed":0,"explosives":0,"stealth":5,"lockpick":0,"engineering":0,"alchemy_medicine":0,"survival":0,"holy":0,"void":0,"nature":0,"necromancy":0,"arcane":0,"fel":0,"spirit_magic":0,"decay":0,"stealing":0},"tags":{"daggers":false,"one_handed_swords":false,"two_handed_swords":false,"one_handed_axes":false,"two_handed_axes":false,"one_handed_maces":false,"two_handed_maces":false,"polearms":false,"staves":false,"fist_weapons":false,"wands":false,"bows":false,"guns":false,"crossbows":false,"thrown_weapons":false,"unarmed":false,"explosives":false,"stealth":false,"lockpick":false,"engineering":false,"alchemy_medicine":false,"survival":false,"holy":false,"void":false,"nature":false,"necromancy":false,"arcane":false,"fel":false,"spirit_magic":false,"decay":false,"stealing":false},"selected_skill":"daggers","hands":{"right":"expensive_dagger","left":"balanced_dagger"},"selected_body_zone":"torso"}},"const":{"attr_total":30,"attr_min":1,"attr_max":10,"level_min":1,"level_max":60,"skill_cap":100,"tag_limit":3,"tag_bonus":10,"base_hit":50,"base_pen":50,"crit_dmg_mult":2.2,"nonpen_min":80,"nonpen_max":100,"ap_base_max":100,"ap_regen_base":6,"ap_regen_ag_mult":1,"armor_dodge_pen_div":3,"heavy_armor_threshold_mult":3,"heavy_armor_regen_pen_div":3,"attack_ap_unarmed":20,"attack_ap_one_hand":30,"attack_ap_dual_wield":50,"attack_ap_two_hand":45,"attack_ap_ranged":40,"attack_ap_wand":35,"attack_ap_explosive":50,"skill_ap_default":25,"skill_ap_fast":20,"skill_ap_magic":35,"magic_optimal_range":30,"magic_max_range":60,"magic_range_penalty":1,"body_target_ap_extra":10,"body_target_crit_cap":25,"dual_main_hit_penalty":10,"dual_offhand_hit_penalty":20,"dual_main_damage_mult":0.75,"dual_offhand_damage_mult":0.5},"utility_range":{"lockpick":{"kind":"melee","reach":1,"label":"взлом"},"stealing":{"kind":"melee","reach":1,"label":"воровство"},"engineering":{"kind":"melee","reach":2,"label":"ремонт / инженерия"},"alchemy_medicine":{"kind":"melee","reach":2,"label":"медицина / алхимия"}}};
+const C = DATA.const;
+const $ = id => document.getElementById(id);
+const clamp=(v,lo,hi,defv=0)=> Number.isFinite(v) ? Math.max(lo, Math.min(hi, v)) : defv;
+const deepClone = obj => JSON.parse(JSON.stringify(obj));
+const rand100 = ()=> Math.floor(Math.random()*100)+1;
+const fmtPct=v=>`${Math.round(v)}%`;
+const weaponMap=Object.fromEntries(DATA.weapons.map(w=>[w.key,w]));
+const bodyMap=Object.fromEntries(DATA.body_targets.map(z=>[z.key,z]));
+const skillMap=Object.fromEntries(DATA.skills.map(s=>[s.key,s]));
+const attrMap=Object.fromEntries(DATA.attrs.map(a=>[a.key,a]));
+
+const state={};
+function initState(){
+  state.level=1;
+  state.attributes={strength:6,agility:6,intellect:6,spirit:6,stamina:6};
+  state.equipment={physical:{},magic:{}}; DATA.equip_slots.forEach(s=>{state.equipment.physical[s.key]=0; state.equipment.magic[s.key]=0;});
+  state.invested={}; state.tags={}; DATA.skills.forEach(s=>{state.invested[s.key]=0; state.tags[s.key]=false;});
+  state.selected_skill=DATA.skills[0].key;
+  state.hands={right:'none',left:'none'};
+  state.difficulty=0; state.distance=0; state.current_ap=C.ap_base_max; state.selected_body_zone='torso';
+  state.target=null; state.enemy_max_hp=0; state.enemy_current_hp=0;
+  state.selected_spell_school='holy'; state.selected_spell=null;
+}
+initState();
+
+function formulaEval(expr,S,A,I,P,E){ return Function('S','A','I','P','E',`return (${expr});`)(S,A,I,P,E); }
+function aliases(attrs=state.attributes){ return {S:attrs.strength,A:attrs.agility,I:attrs.intellect,P:attrs.spirit,E:attrs.stamina}; }
+function totalAttr(){ return Object.values(state.attributes).reduce((a,b)=>a+b,0); }
+function skillPointsPerLevel(){ return 2 + Math.floor(state.attributes.intellect/4); }
+function totalSkillPoints(){ return state.level * skillPointsPerLevel(); }
+function spentSkillPoints(){ return Object.values(state.invested).reduce((a,b)=>a+b,0); }
+function remainingSkillPoints(){ return totalSkillPoints()-spentSkillPoints(); }
+function tagCount(){ return Object.values(state.tags).filter(Boolean).length; }
+function baseValues(attrs=state.attributes){ const {S,A,I,P,E}=aliases(attrs); const out={}; DATA.skills.forEach(s=>out[s.key]=clamp(formulaEval(s.formula,S,A,I,P,E),0,C.skill_cap,0)); return out; }
+function rawValue(key, base=baseValues()){ let v=base[key]+(state.invested[key]||0)+(state.tags[key]?C.tag_bonus:0); return clamp(v,0,C.skill_cap,0); }
+function conflictBreakdown(key, base=baseValues()){
+  const weights=DATA.conflict[key]||{};
+  const parts=[];
+  let total=0;
+  for(const [opp,weight] of Object.entries(weights)){
+    if(!weight) continue;
+    // Deliberate school development creates conflict: invested points plus TAG.
+    // Base aptitude from attributes does NOT create conflict by itself.
+    const oppInvested=state.invested[opp]||0;
+    const oppTagBonus=state.tags[opp]?C.tag_bonus:0;
+    const oppDeveloped=oppInvested+oppTagBonus;
+    if(oppDeveloped<=0) continue;
+    const amount=oppDeveloped*weight;
+    if(amount<=0) continue;
+    total+=amount;
+    parts.push({key:opp,weight,invested:oppInvested,tag_bonus:oppTagBonus,developed:oppDeveloped,amount});
+  }
+  return {total:Math.round(total),parts};
+}
+function conflictPenalty(key, base=baseValues()){ return conflictBreakdown(key,base).total; }
+function effectiveValue(key, base=baseValues()){ return clamp(rawValue(key,base)-conflictPenalty(key,base),0,C.skill_cap,0); }
+function selectedSkill(){ return skillMap[state.selected_skill]; }
+function equipmentPhysicalTotal(eq=state.equipment){ return Object.values(eq.physical).reduce((a,b)=>a+b,0); }
+function equipmentMagicTotal(eq=state.equipment){ return Object.values(eq.magic).reduce((a,b)=>a+b,0); }
+function dodgeValue(attrs=state.attributes, equipPhys=equipmentPhysicalTotal()){ return clamp(5 + attrs.agility*2 - Math.floor(equipPhys/C.armor_dodge_pen_div), 0, 60, 0); }
+function armorValue(equipPhys=equipmentPhysicalTotal()){ return clamp(equipPhys,0,C.skill_cap,0); }
+function magicAvoidValue(attrs=state.attributes){ return clamp(5 + attrs.spirit,0,60,0); }
+function magicWardValue(attrs=state.attributes, equipMagic=equipmentMagicTotal()){ return clamp(attrs.spirit*2 + attrs.stamina + equipMagic, 0, C.skill_cap, 0); }
+function maxAp(){ return C.ap_base_max; }
+function heavyArmorRegenPenalty(attrs=state.attributes,equipPhys=equipmentPhysicalTotal()){ const comfort=attrs.stamina*C.heavy_armor_threshold_mult; return Math.max(0, Math.floor((equipPhys-comfort)/C.heavy_armor_regen_pen_div)); }
+function apRegenPerSecond(){ return Math.max(1, C.ap_regen_base + state.attributes.agility*C.ap_regen_ag_mult - heavyArmorRegenPenalty()); }
+function hpValue(attrs=state.attributes){ return 50 + attrs.stamina*10; }
+function targetAttrs(){ if(!state.target?.attributes) return null; const a=state.target.attributes; return {strength:clamp(a.strength,1,10,6), agility:clamp(a.agility,1,10,6), intellect:clamp(a.intellect,1,10,6), spirit:clamp(a.spirit,1,10,6), stamina:clamp(a.stamina,1,10,6)}; }
+function targetEquipment(){ if(!state.target?.equipment) return {physical:{},magic:{}}; const eq={physical:{},magic:{}}; DATA.equip_slots.forEach(s=>{eq.physical[s.key]=clamp(state.target.equipment?.physical?.[s.key]||0,0,25,0); eq.magic[s.key]=clamp(state.target.equipment?.magic?.[s.key]||0,0,25,0);}); return eq; }
+function targetDisplayName(){ return state.target?.__filename || 'target'; }
+function targetDodgeValue(){ const a=targetAttrs(); if(!a) return 0; return dodgeValue(a, Object.values(targetEquipment().physical).reduce((x,y)=>x+y,0)); }
+function targetArmorValue(){ return state.target ? armorValue(Object.values(targetEquipment().physical).reduce((x,y)=>x+y,0)) : 0; }
+function targetMagicAvoidValue(){ const a=targetAttrs(); if(!a) return 0; return magicAvoidValue(a); }
+function targetMagicWardValue(){ const a=targetAttrs(); if(!a) return 0; return magicWardValue(a, Object.values(targetEquipment().magic).reduce((x,y)=>x+y,0)); }
+function setEnemyHpFromTarget(){ if(!state.target){ state.enemy_max_hp=0; state.enemy_current_hp=0; return; } const hp=50 + ((state.target.attributes?.stamina||6)*10); state.enemy_max_hp=hp; state.enemy_current_hp=hp; }
+function normalizeHands(){ const rw=weaponMap[state.hands.right]||weaponMap.none; const lw=weaponMap[state.hands.left]||weaponMap.none; if(rw.hands===2 && state.hands.left!=='none'){ state.hands.left='none'; }
+  if((weaponMap[state.hands.left]||weaponMap.none).hands===2){ state.hands.left='none'; }
+}
+function weaponRequiredStrength(w){ const key=w.key||''; const skill=w.skill; const hands=w.hands||0; if(key==='none'||key==='unarmed_virtual') return 0;
+  if(['two_handed_maces','two_handed_axes','two_handed_swords'].includes(skill)) return 8;
+  if(skill==='polearms') return 7;
+  if(['crossbows','guns'].includes(skill)) return 5;
+  if(['one_handed_maces','one_handed_axes','one_handed_swords'].includes(skill)) return 4;
+  if(['bows','staves','explosives'].includes(skill)) return 3;
+  if(['daggers','fist_weapons','thrown_weapons','wands'].includes(skill)) return 2;
+  if(hands===2) return 6; return 1;
+}
+function weaponStrengthApPenalty(w){ return Math.max(0, weaponRequiredStrength(w)-state.attributes.strength)*5; }
+function strengthPenetrationBonusForWeapon(w){ const s=w.skill; const st=state.attributes.strength; if(['two_handed_maces','two_handed_axes','two_handed_swords','polearms'].includes(s)) return Math.floor(st/3); if(['one_handed_maces','one_handed_axes'].includes(s)) return Math.floor(st/4); return 0; }
+function meleeDamageBonusForWeapon(w){ return w.range_kind==='melee' ? Math.floor(state.attributes.strength/2) : 0; }
+function thrownDamageBonusForWeapon(w){ return w.skill==='thrown_weapons' ? Math.floor(state.attributes.strength/3) : 0; }
+function weaponCatalogRange(w){ return [w.damage_min||Math.max(1,w.damage||0), w.damage_max||Math.max(2,w.damage||0)]; }
+function weaponBaseDamageRange(w){ const [lo,hi]=weaponCatalogRange(w); const stat=meleeDamageBonusForWeapon(w)+thrownDamageBonusForWeapon(w); return [clamp(lo+stat,0,999,0), clamp(hi+stat,0,999,0)]; }
+function skillRollBonus(eff){ return clamp(Math.floor(eff/2),0,50,0); }
+function critSuccessThreshold(eff){ return clamp(1 + Math.floor(eff/20),1,10,1); }
+function critFailureThreshold(eff){ return clamp(1 + Math.floor((100-eff)/20),1,10,1); }
+function bodyTargetApExtra(){ return state.selected_body_zone==='torso' ? 0 : C.body_target_ap_extra; }
+function bodyAdjustedCritSuccessThreshold(eff, body){ const base=critSuccessThreshold(eff); return clamp(base + (body.crit_bonus||0), 1, C.body_target_crit_cap, base); }
+function bodyCriticalDamageMult(body){ return C.crit_dmg_mult * (body.crit_damage_mult || 1); }
+function weaponDistanceInfo(w, distance){ distance=clamp(distance,0,200,0); if(w.range_kind==='melee'){ const reach=clamp(w.reach||1,0,20,1); if(distance>reach) return {allowed:false, penalty:0, text:`${w.name}: ${distance} ярдов > reach ${reach}. Цель вне досягаемости.`}; return {allowed:true, penalty:0, text:`${w.name}: reach ${reach}, дистанция ${distance}. Цель в досягаемости.`}; }
+ if(w.range_kind==='ranged'){ const optimal=clamp(w.optimal||0,0,200,0), maxR=clamp(w.max_range||optimal,0,200,optimal), per=clamp(w.range_penalty||1,0,10,1); if(distance>maxR) return {allowed:false, penalty:0, text:`${w.name}: ${distance} ярдов > max ${maxR}. Цель вне дальности.`}; const pen=Math.max(0,distance-optimal)*per; return {allowed:true, penalty:pen, text:`${w.name}: optimal ${optimal}, max ${maxR}, дистанция ${distance}, штраф -${pen}%.`}; }
+ return {allowed:true, penalty:0, text:'Дистанция не используется.'}; }
+function skillDistanceInfo(skillKey, distance){ distance=clamp(distance,0,200,0); const s=skillMap[skillKey]; if(!s) return {allowed:true, penalty:0, text:'Дистанция не используется.'};
+ if(s.cat==='МАГИЯ'){ if(distance>C.magic_max_range) return {allowed:false, penalty:0, text:`магия: ${distance} ярдов > max ${C.magic_max_range}. Цель вне дальности.`}; const pen=Math.max(0,distance-C.magic_optimal_range)*C.magic_range_penalty; return {allowed:true, penalty:pen, text:`магия: optimal ${C.magic_optimal_range}, max ${C.magic_max_range}, дистанция ${distance}, штраф -${pen}%.`}; }
+ const rule=DATA.utility_range[skillKey]; if(rule && rule.kind==='melee'){ const reach=clamp(rule.reach||1,0,20,1); const label=rule.label||s.name; if(distance>reach) return {allowed:false, penalty:0, text:`${label}: ${distance} ярдов > reach ${reach}. Нужно быть рядом.`}; return {allowed:true, penalty:0, text:`${label}: reach ${reach}, дистанция ${distance}. Можно выполнить.`}; }
+ return {allowed:true, penalty:0, text:'Для этого навыка дистанция не ограничивает бросок.'}; }
+function compatibleWeaponNames(skillKey){ if(skillKey==='unarmed') return 'пустые руки'; return DATA.weapons.filter(w=>w.skill===skillKey && w.key!=='unarmed_virtual').map(w=>w.name).join(', ') || 'не требуется'; }
+function isDualWielding(){ const rw=weaponMap[state.hands.right]||weaponMap.none, lw=weaponMap[state.hands.left]||weaponMap.none; return rw.key!=='none' && lw.key!=='none' && rw.hands===1 && lw.hands===1; }
+function equippedAttackWeapons(){ normalizeHands(); const r=weaponMap[state.hands.right]||weaponMap.none, l=weaponMap[state.hands.left]||weaponMap.none; if(r.key==='none' && l.key==='none') return [{slot:'unarmed',weapon:weaponMap['unarmed_virtual'],skill_key:'unarmed',dual:false,hit_penalty:0,damage_mult:1.0}]; if(r.hands===2) return [{slot:'both',weapon:r,skill_key:r.skill,dual:false,hit_penalty:0,damage_mult:1.0}]; const out=[]; if(isDualWielding()){ out.push({slot:'right',weapon:r,skill_key:r.skill,dual:true,hit_penalty:C.dual_main_hit_penalty,damage_mult:C.dual_main_damage_mult}); out.push({slot:'left',weapon:l,skill_key:l.skill,dual:true,hit_penalty:C.dual_offhand_hit_penalty,damage_mult:C.dual_offhand_damage_mult}); return out; } if(r.key!=='none') out.push({slot:'right',weapon:r,skill_key:r.skill,dual:false,hit_penalty:0,damage_mult:1.0}); else if(l.key!=='none') out.push({slot:'left',weapon:l,skill_key:l.skill,dual:false,hit_penalty:0,damage_mult:1.0}); return out; }
+function attackApCost(attacks){ if(!attacks.length) return 0; const strPenalty=attacks.reduce((s,a)=>s+weaponStrengthApPenalty(a.weapon),0); if(attacks.length>=2) return C.attack_ap_dual_wield + strPenalty; const w=attacks[0].weapon, key=w.key, skill=w.skill; if(key==='unarmed_virtual') return C.attack_ap_unarmed; if(skill==='explosives') return C.attack_ap_explosive + strPenalty; if(skill==='wands') return C.attack_ap_wand + strPenalty; if(w.hands===2) return C.attack_ap_two_hand + strPenalty; if(w.range_kind==='ranged') return C.attack_ap_ranged + strPenalty; return C.attack_ap_one_hand + strPenalty; }
+function skillRollAllowed(skillKey){ const s=skillMap[skillKey]; if(!s) return false; const weaponSkills=new Set(DATA.weapons.filter(w=>w.skill).map(w=>w.skill)); return !(weaponSkills.has(skillKey) || skillKey==='unarmed'); }
+function skillRollBlockReason(){ return 'Это боевой/оружейный навык. Его нельзя бросать напрямую из списка.\n\nНажмите ATTACK: система сама возьмёт оружие из рук и сама выберет подходящий навык для каждой руки.'; }
+function consumeAp(cost, actionName){ cost=Math.max(0,Math.trunc(cost)); if(cost<=0) return state.current_ap; if(state.current_ap < cost){ const txt=`=== НЕДОСТАТОЧНО AP ===\n\nДействие: ${actionName}\nНужно AP: ${cost}\nСейчас AP: ${Math.trunc(state.current_ap)} / ${maxAp()}\nMax AP: ${maxAp()} (fixed)\nРеген: 6 + AG - armor penalty = +${apRegenPerSecond()} AP/sec.`; writeRollText(txt, `RED: НЕТ AP ${Math.trunc(state.current_ap)}/${cost}`, false); return null; }
+ const before=state.current_ap; state.current_ap=Math.max(0, state.current_ap-cost); return before; }
+function applyEnemyDamage(dmg){ const before=state.enemy_current_hp; state.enemy_current_hp=Math.max(0, state.enemy_current_hp-dmg); return [before, state.enemy_current_hp]; }
+function previewPrimaryHitChanceForZone(zoneKey){ const attacks=equippedAttackWeapons(); if(!attacks.length) return 0; const atk=attacks[0], w=atk.weapon, eff=effectiveValue(atk.skill_key), bonus=skillRollBonus(eff), dist=weaponDistanceInfo(w,state.distance); if(!dist.allowed) return 0; const avoid=state.target ? targetDodgeValue() : 0; const zone=bodyMap[zoneKey]; const raw=C.base_hit + bonus + (w.accuracy||0) - avoid - state.difficulty - dist.penalty - atk.hit_penalty + (zone.hit_mod||0); return clamp(raw,1,95,50); }
+function updateAttrRows(){ const container=$('attrRows'); container.innerHTML=''; DATA.attrs.forEach(a=>{ const row=document.createElement('div'); row.className='row'; row.innerHTML=`<div class="label">${a.short}</div><button class="statbtn" data-attr="${a.key}" data-delta="-1">-</button><div class="valuebox">${state.attributes[a.key]}</div><button class="statbtn" data-attr="${a.key}" data-delta="1">+</button><div class="text">${a.full}</div>`; container.appendChild(row);}); container.querySelectorAll('button[data-attr]').forEach(b=>b.onclick=()=>changeAttr(b.dataset.attr, Number(b.dataset.delta))); }
+function updateEquipGrid(){ const g=$('equipGrid'); g.innerHTML=''; ['Слот','Физ','','','','Маг','','','Слот','Физ','','','','Маг','',''].forEach((h,i)=>{ const d=document.createElement('div'); d.className='hdr'; d.textContent=h; g.appendChild(d); }); const slots=DATA.equip_slots;
+ function cellsFor(slot){ if(!slot) return ['','','','','','','','']; return [slot.name, `<button class="statbtn" data-eq="${slot.key}" data-kind="physical" data-d="-1">-</button>`, `<div class="valuebox">${state.equipment.physical[slot.key]}</div>`, `<button class="statbtn" data-eq="${slot.key}" data-kind="physical" data-d="1">+</button>`, '', `<button class="statbtn" data-eq="${slot.key}" data-kind="magic" data-d="-1">-</button>`, `<div class="valuebox">${state.equipment.magic[slot.key]}</div>`, `<button class="statbtn" data-eq="${slot.key}" data-kind="magic" data-d="1">+</button>`]; }
+ for(let row=0; row<5; row++){ const pair=[...(cellsFor(slots[row])), ...(cellsFor(slots[row+5]))]; pair.forEach((html, idx)=>{ const d=document.createElement('div'); if(idx===0||idx===8) d.className='slot'; d.innerHTML=html; g.appendChild(d); }); }
+ g.querySelectorAll('button[data-eq]').forEach(b=>b.onclick=()=>changeEquip(b.dataset.eq,b.dataset.kind,Number(b.dataset.d))); }
+function updateHandSelects(){ normalizeHands(); const r=$('rightHand'), l=$('leftHand'); const rightChoices=DATA.weapons.filter(w=>w.key!=='unarmed_virtual'); const leftChoices=[weaponMap.none,...DATA.weapons.filter(w=>w.key!=='unarmed_virtual' && w.hands===1)]; const toLabel=w=>{ if(w.key==='none') return 'Пустая рука  [none]'; const hands=(w.skill==='wands'||w.skill==='explosives') && w.hands===2 ? '1H/2S' : (w.hands===2 ? '2S' : '1S'); const range=w.range_kind==='melee' ? `R${w.reach||0}` : (w.range_kind==='ranged' ? `O${w.optimal||0}/M${w.max_range||0}` : 'R-'); const [lo,hi]=weaponCatalogRange(w); const dmg=lo!==hi?`${lo}-${hi}`:String(lo); return `${w.name} | ${skillMap[w.skill]?.name||'-'} | ${hands} | ${range} | ST${weaponRequiredStrength(w)} | DMG ${dmg}  [${w.key}]`; };
+ r.innerHTML=rightChoices.map(w=>`<option value="${w.key}">${toLabel(w)}</option>`).join(''); l.innerHTML=leftChoices.map(w=>`<option value="${w.key}">${toLabel(w)}</option>`).join(''); r.value=state.hands.right; l.value=state.hands.left; r.onchange=()=>{ state.hands.right=r.value; normalizeHands(); render();}; l.onchange=()=>{ state.hands.left=l.value; normalizeHands(); render();}; $('weaponHint').textContent=`ATTACK uses weapons currently equipped in hand slots. Skill rolls are only utility / magic.`; }
+function updateSkillList(){ const base=baseValues(); const list=$('skillList'); list.innerHTML=''; let currentCat=''; DATA.skills.forEach(s=>{ if(s.cat!==currentCat){ currentCat=s.cat; const hdr=document.createElement('div'); hdr.className='skillCat'; hdr.textContent=currentCat; list.appendChild(hdr); }
+ const eff=effectiveValue(s.key,base), tagged=state.tags[s.key]; const row=document.createElement('div'); row.className='skillRow'+(state.selected_skill===s.key?' active':''); row.innerHTML=`<div class="n">${s.name}</div><div class="v">${eff}%</div><div class="t">${tagged?'TAG':''}</div>`; row.onclick=()=>{ state.selected_skill=s.key; render(); }; list.appendChild(row); }); $('skillPointsText').textContent=`SKILL POINTS: ${remainingSkillPoints()} / ${totalSkillPoints()}`; $('tagInfo').textContent=`TAGS: ${tagCount()} / ${C.tag_limit}`; }
+function updateSelectedSkillBox(){ const key=state.selected_skill, sk=skillMap[key], base=baseValues(), raw=rawValue(key,base), eff=effectiveValue(key,base), conf=conflictPenalty(key); const weaponRequired=!skillRollAllowed(key); const txt=[`Навык: ${sk.name}`, `Категория: ${sk.cat}`, '', sk.desc, '', `База: ${base[key]}%`, `Инвестировано: +${state.invested[key]||0}`, `TAG: ${state.tags[key] ? '+'+C.tag_bonus : 'нет'}`, `Конфликт: -${conf}%`, `Эффективно: ${eff}% / ${C.skill_cap}%`, '', `Совместимое оружие: ${compatibleWeaponNames(key)}`, weaponRequired ? 'Прямой бросок из списка: НЕТ (используй ATTACK)' : 'Прямой бросок из списка: ДА'].join('\n'); $('selectedNameDisplay').textContent=sk.name; $('selectedSkillBox').textContent=txt; }
+function updateTargetPanel(){ if(!state.target){ $('targetStatus').textContent='Цель не загружена.'; $('targetDefenseBox').textContent='После LOAD TARGET здесь будет показано:\nDodge / Armor\nMagic Avoid / Magic Ward'; return; } const hp=50 + state.target.attributes.stamina*10; $('targetStatus').textContent=`Цель: ${targetDisplayName()}\nУровень: ${state.target.level ?? '?'}`; $('targetDefenseBox').textContent=`HP:           ${hp}  (50 + EN*10)\nDodge:        ${targetDodgeValue()}%  (ловкость)\nArmor:        ${targetArmorValue()}%  (физ. экипировка)\nMagic Avoid:  ${targetMagicAvoidValue()}%  (дух)\nMagic Ward:   ${targetMagicWardValue()}%  (маг. экипировка+дух+выносливость)\n\nФизическая атака: HIT против Dodge, затем PEN против Armor.\nМагия: HIT против Magic Avoid, затем PEN против Magic Ward.`; }
+function updateBars(){ $('apStatus').textContent=`AP: ${Math.trunc(state.current_ap)} / ${maxAp()}   max fixed 100   regen 6+AG-armor = +${apRegenPerSecond()}/sec`; $('apBar').style.width=`${(state.current_ap/maxAp())*100}%`; $('enemyHpStatus').textContent=`ENEMY HP: ${state.enemy_current_hp} / ${state.enemy_max_hp}${state.target?`  (${targetDisplayName()})`:''}`; $('enemyHpBar').style.width= state.enemy_max_hp ? `${(state.enemy_current_hp/state.enemy_max_hp)*100}%` : '0%'; }
+function updateTargetZones(){ const c=$('zoneCanvas'); c.querySelectorAll('.zone').forEach(z=>z.remove()); const mapClass={head:'z-head',eyes:'z-eyes',right_arm:'z-ra',left_arm:'z-la',torso:'z-torso',groin:'z-groin',right_leg:'z-rl',left_leg:'z-ll'}; DATA.body_targets.forEach(z=>{ const d=document.createElement('div'); d.className=`zone ${mapClass[z.key]||''} ${state.selected_body_zone===z.key?'active':''}`; d.innerHTML=`${z.name}<span class="chance">${previewPrimaryHitChanceForZone(z.key)}%</span>`; d.onclick=()=>{ state.selected_body_zone=z.key; render(); }; c.appendChild(d);}); const info=bodyMap[state.selected_body_zone]; $('zoneStatus').textContent=`Selected: ${info.name} | HIT ${info.hit_mod>0?'+':''}${info.hit_mod}% | Crit +${info.crit_bonus}% | DMG x${info.damage_mult.toFixed(2)} | AP +${state.selected_body_zone==='torso'?0:C.body_target_ap_extra} | ${info.note}`; }
+function updateDerivedBox(){ const eqp=equipmentPhysicalTotal(), eqm=equipmentMagicTotal(); $('equipSummary').textContent=`Физическая экипировка: ${eqp} | Магическая экипировка: ${eqm}`; $('descBox').textContent=DATA.attrs.map(a=>`${a.short} ${a.full}: ${a.desc}`).join('\n'); $('derivedBox').textContent=`HP:                    ${hpValue()}\nDodge:                 ${dodgeValue()}%\nArmor:                 ${armorValue()}%\nMagic Avoid:           ${magicAvoidValue()}%\nMagic Ward:            ${magicWardValue()}%\n\nAP max:                ${maxAp()} (fixed)\nAP regen / sec:        ${apRegenPerSecond()}\nHeavy armor penalty:   ${heavyArmorRegenPenalty()}\n\nSkill points / level:  ${skillPointsPerLevel()}\nTotal skill points:    ${totalSkillPoints()}\nSpent skill points:    ${spentSkillPoints()}\nRemaining:             ${remainingSkillPoints()}\n\nRight hand:            ${(weaponMap[state.hands.right]||weaponMap.none).name}\nLeft hand:             ${(weaponMap[state.hands.left]||weaponMap.none).name}\nDual wield:            ${isDualWielding()?'ДА':'нет'}`; }
+function changeAttr(key, delta){ const cur=state.attributes[key], next=clamp(cur+delta,C.attr_min,C.attr_max,cur); if(next===cur) return; const newTotal=totalAttr()-cur+next; if(newTotal > C.attr_total) return; state.attributes[key]=next; render(); }
+function changeLevel(delta){ state.level=clamp(state.level+delta,C.level_min,C.level_max,state.level); render(); }
+function changeEquip(key,kind,delta){ const cur=state.equipment[kind][key]; state.equipment[kind][key]=clamp(cur+delta,0,25,cur); render(); }
+function changeSelectedSkill(delta){ const key=state.selected_skill; const base=baseValues(); if(delta>0){ const add=Math.min(delta, remainingSkillPoints(), Math.max(0, C.skill_cap-rawValue(key,base))); if(add<=0) return; state.invested[key]+=add; } else { const sub=Math.min(-delta, state.invested[key]||0); if(sub<=0) return; state.invested[key]-=sub; } render(); }
+function toggleTagSelected(){ const key=state.selected_skill; if(state.tags[key]) state.tags[key]=false; else { if(tagCount()>=C.tag_limit) return; state.tags[key]=true; } render(); }
+function writeRollText(text,status='STATUS: —',success=null){ const rt=$('rollText'); rt.textContent=text; const sl=$('statusLine'); const cleanStatus=String(status).replace(/^(?:GREEN|RED):\s*/i,''); sl.textContent=cleanStatus; sl.className='statusLine ' + (success===null?'neutral':success?'good':'bad'); }
+function loadTargetFromData(data, filename='target.json'){ if(!data || !data.attributes) throw new Error('Это не RollBoy save JSON.'); state.target=deepClone(data); state.target.__filename=filename; updateTargetPanel(); setEnemyHpFromTarget(); writeRollText('Цель загружена. ENEMY HP рассчитан из сохранённой цели: 50 + EN*10. Красный HP-бар показывает именно эту цель.', 'STATUS: TARGET LOADED', true); render(); }
+function clearTarget(){ state.target=null; state.enemy_max_hp=0; state.enemy_current_hp=0;
+  state.selected_spell_school='holy'; state.selected_spell=null; render(); }
+function stateSnapshot(){ return {version:'24-body-targeting-web', level:state.level, difficulty:state.difficulty, distance:state.distance, attributes:deepClone(state.attributes), equipment:deepClone(state.equipment), invested:deepClone(state.invested), tags:deepClone(state.tags), selected_skill:state.selected_skill, hands:deepClone(state.hands), selected_body_zone:state.selected_body_zone, selected_spell_school:state.selected_spell_school, selected_spell:state.selected_spell, resources:{current_ap:Math.trunc(state.current_ap), enemy_max_hp:state.enemy_max_hp, enemy_current_hp:state.enemy_current_hp}}; }
+function applyState(data){ initState(); if(data.attributes) Object.assign(state.attributes, data.attributes); if(data.equipment?.physical) Object.assign(state.equipment.physical,data.equipment.physical); if(data.equipment?.magic) Object.assign(state.equipment.magic,data.equipment.magic); if(data.invested) Object.assign(state.invested,data.invested); if(data.tags) Object.assign(state.tags,data.tags); if(data.hands) Object.assign(state.hands,data.hands); state.level=clamp(data.level??1,C.level_min,C.level_max,1); state.difficulty=clamp(data.difficulty??0,-50,50,0); state.distance=clamp(data.distance??0,0,200,0); state.current_ap=clamp(data.resources?.current_ap ?? C.ap_base_max, 0, C.ap_base_max, C.ap_base_max); state.selected_skill=skillMap[data.selected_skill]?data.selected_skill:DATA.skills[0].key; state.selected_body_zone=bodyMap[data.selected_body_zone]?data.selected_body_zone:'torso'; state.selected_spell_school=data.selected_spell_school||'holy'; state.selected_spell=data.selected_spell||null; if(data.resources?.enemy_max_hp){ state.enemy_max_hp=data.resources.enemy_max_hp|0; state.enemy_current_hp=data.resources.enemy_current_hp|0; } normalizeHands(); render(); }
+function rollAttack(){ const attacks=equippedAttackWeapons(); const body=bodyMap[state.selected_body_zone]; if(!attacks.length){ writeRollText('Нечем атаковать. Возьмите оружие в руку или оставьте руки пустыми для рукопашной атаки.', 'RED: НЕТ ОРУЖИЯ', false); return; }
+ const apCost=attackApCost(attacks)+bodyTargetApExtra(); const apBefore=consumeAp(apCost,'ATTACK'); if(apBefore===null){ render(); return; }
+ const targetLoaded=!!state.target, avoid=targetLoaded?targetDodgeValue():0, armor=targetLoaded?targetArmorValue():0;
+ let parts=[]; parts.push(`=== АТАКА ОРУЖИЕМ v24 ===\n\nАТАКУЮЩИЙ:\n  Правая рука: ${(weaponMap[state.hands.right]||weaponMap.none).name}\n  Левая рука:  ${(weaponMap[state.hands.right]||weaponMap.none).hands===2?'занята оружием на оба слота':(weaponMap[state.hands.left]||weaponMap.none).name}\n  Dual wield:  ${isDualWielding()?'ДА':'нет'}\n\nAIMED SHOT / ЧАСТЬ ТЕЛА:\n  Цель удара:   ${body.name}\n  HIT mod:      ${(body.hit_mod||0)>=0?'+':''}${body.hit_mod||0}%\n  DMG mod:      x${body.damage_mult.toFixed(2)}\n  Crit bonus:   +${body.crit_bonus||0}%; crit dmg x${body.crit_damage_mult.toFixed(2)}\n  AP extra:     +${bodyTargetApExtra()}\n  Эффект:       ${body.note}\n\n`);
+ if(targetLoaded) parts.push(`ЦЕЛЬ:\n  Файл:        ${targetDisplayName()}\n  Уклонение:   Dodge ${avoid}%\n  Броня:       Armor ${armor}%\n\n`); else parts.push('ЦЕЛЬ:\n  Файл:        не загружен; Dodge/Armor = 0\n\n');
+ parts.push(`AP: -${apCost} (${Math.trunc(apBefore)} -> ${Math.trunc(state.current_ap)})\n\n`);
+ let totalDamage=0, anySuccess=false;
+ attacks.forEach((atk, idx)=>{
+   const w=atk.weapon, attackSkillKey=atk.skill_key||'unarmed', attackEff=effectiveValue(attackSkillKey), attackBonus=skillRollBonus(attackEff), attackCritHit=bodyAdjustedCritSuccessThreshold(attackEff, body), attackCritFail=critFailureThreshold(attackEff);
+   const handPenalty=atk.hit_penalty||0, handDamageMult=atk.damage_mult||1, finalDamageMult=handDamageMult*(body.damage_mult||1), distInfo=weaponDistanceInfo(w,state.distance);
+   const rollHit=rand100(); let rollCrit=null, hitRaw=0, hitChance=0;
+   if(distInfo.allowed){ hitRaw=C.base_hit + attackBonus + (w.accuracy||0) - avoid - state.difficulty - distInfo.penalty - handPenalty + (body.hit_mod||0); hitChance=clamp(hitRaw,1,95,50); }
+   let penRoll=null, penRaw=null, penChance=null, damage=0, attackSuccess=false, criticalHit=false, result='';
+   let dmgLo, dmgHi; [dmgLo,dmgHi]=weaponBaseDamageRange(w); const dmgRoll=Math.floor(Math.random()*(dmgHi-dmgLo+1))+dmgLo; const afterHand=Math.round(dmgRoll*finalDamageMult);
+
+   if(hitChance<=0){
+     result='ПРОМАХ: цель вне дистанции';
+   } else if(rollHit >= 101-attackCritFail){
+     result='КРИТИЧЕСКИЙ ПРОМАХ';
+   } else if(rollHit > hitChance){
+     result='ПРОМАХ';
+   } else {
+     // HIT succeeded. Critical chance is now a completely separate d100 roll.
+     rollCrit=rand100();
+     if(rollCrit <= attackCritHit){
+       criticalHit=true;
+       result='КРИТИЧЕСКОЕ ПОПАДАНИЕ';
+       damage=Math.max(1, Math.round(afterHand * bodyCriticalDamageMult(body)));
+       attackSuccess=true;
+     } else if(targetLoaded){
+       const stPen=strengthPenetrationBonusForWeapon(w);
+       penRaw=C.base_pen + attackBonus + (w.ap||0) + stPen - armor - state.difficulty;
+       penChance=clamp(penRaw,5,95,50);
+       penRoll=rand100();
+       if(penRoll<=penChance){
+         result='ПОПАДАНИЕ + ПРОБИТИЕ'; damage=Math.max(1,afterHand); attackSuccess=true;
+       } else {
+         result='ПОПАДАНИЕ + НЕПРОБИТИЕ';
+         const red=Math.floor(Math.random()*(C.nonpen_max-C.nonpen_min+1))+C.nonpen_min;
+         damage=Math.round(afterHand*(100-red)/100);
+         if(red<100 && afterHand>0) damage=Math.max(1,damage);
+         attackSuccess=damage>0;
+       }
+     } else {
+       result='УСПЕХ'; damage=Math.max(1,afterHand); attackSuccess=true;
+     }
+   }
+
+   totalDamage+=damage; anySuccess=anySuccess||attackSuccess;
+   const slotName={right:'правая рука',left:'левая рука',both:'обе руки',unarmed:'голые руки'}[atk.slot]||atk.slot;
+   const stReq=weaponRequiredStrength(w), stApPenalty=weaponStrengthApPenalty(w), stPenBonus=strengthPenetrationBonusForWeapon(w);
+   parts.push(`АТАКА ${idx+1}: ${w.name} / ${slotName}\n  Навык выбран автоматически: ${(skillMap[attackSkillKey]||{name:attackSkillKey}).name} ${attackEff}% (+${attackBonus})\n  Оружие:       DMG ${weaponCatalogRange(w).join('-')} HP, AP ${(w.ap||0)>=0?'+':''}${w.ap||0}, точность ${(w.accuracy||0)>=0?'+':''}${w.accuracy||0}, ST req ${stReq}\n  База урона:   ${dmgLo}-${dmgHi} HP с учётом стат-бонуса\n  Дистанция:    ${distInfo.text}\n  Рука:         HIT -${handPenalty}%, dmg x${handDamageMult.toFixed(2)}\n  Зона:         ${body.name}: HIT ${(body.hit_mod||0)>=0?'+':''}${body.hit_mod||0}%, dmg x${body.damage_mult.toFixed(2)}, CRIT ${attackCritHit}%\n  ST штраф AP:  +${stApPenalty} AP\n  HIT:          ${C.base_hit} + ${attackBonus} + ${w.accuracy||0} - Dodge ${avoid} ${state.difficulty>=0?'- '+state.difficulty:'+ '+Math.abs(state.difficulty)} - range ${distInfo.penalty} - hand ${handPenalty} + zone ${body.hit_mod||0} = ${hitRaw}% -> ${hitChance}%\n  d100 HIT:     ${rollHit}\n`);
+   if(rollCrit===null) parts.push(`  d100 CRIT:    не бросается (сначала нужно попасть)\n`);
+   else parts.push(`  d100 CRIT:    ${rollCrit} / шанс ${attackCritHit}%${criticalHit?' -> CRIT':' -> обычное попадание'}\n`);
+   if(penRoll===null){
+     parts.push(criticalHit?'  PEN:          автоматическое при критическом попадании\n':(!targetLoaded && attackSuccess?'  PEN:          не бросается без загруженной цели\n':'  PEN:          не бросается\n'));
+   } else {
+     parts.push(`  PEN:          ${C.base_pen} + ${attackBonus} + ${w.ap||0} + STpen ${stPenBonus} - Armor ${armor} ${state.difficulty>=0?'- '+state.difficulty:'+ '+Math.abs(state.difficulty)} = ${penRaw}% -> ${penChance}%\n  d100 PEN:     ${penRoll}\n`);
+   }
+   parts.push(`  DMG ROLL:     ${dmgRoll} -> рука/зона x${finalDamageMult.toFixed(2)} = ${afterHand} HP\n`);
+   if(criticalHit) parts.push(`  CRIT DMG:     ${afterHand} x${bodyCriticalDamageMult(body).toFixed(2)} = ${damage} HP\n`);
+   parts.push(`  УРОН:         ${damage}\n  РЕЗУЛЬТАТ:    ${result}\n\n`);
+ });
+ const [hpBefore,hpAfter]=totalDamage>0?applyEnemyDamage(totalDamage):[state.enemy_current_hp,state.enemy_current_hp];
+ parts.push(`ИТОГО УРОН ЗА ДЕЙСТВИЕ: ${totalDamage}\nENEMY HP: ${hpBefore} -> ${hpAfter} / ${state.enemy_max_hp}`);
+ writeRollText(parts.join('').trimEnd(), anySuccess?`GREEN: АТАКА УСПЕШНА / ${totalDamage} DMG`:'RED: АТАКА ПРОВАЛЕНА / 0 DMG', anySuccess); render(); }
+
+function utilityStatBonus(skillKey){ const s=skillMap[skillKey]; return s?.cat==='НАВЫКИ' ? Math.floor(state.attributes.intellect/2) : 0; }
+function magicStatBonus(skillKey){ const s=skillMap[skillKey]; if(s?.cat!=='МАГИЯ') return 0; const I=state.attributes.intellect,P=state.attributes.spirit; if(['holy','nature','spirit_magic'].includes(skillKey)) return Math.floor(P/2); if(['void','necromancy'].includes(skillKey)) return Math.floor((I+P)/4); return Math.floor(I/2); }
+function skillApCost(skillKey){ const s=skillMap[skillKey]; if(!s) return C.skill_ap_default; if(s.cat==='МАГИЯ') return Math.max(10, C.skill_ap_magic - Math.floor(state.attributes.spirit/3)); if(['lockpick','stealing','stealth','survival'].includes(skillKey)) return C.skill_ap_fast; return C.skill_ap_default; }
+function rollSelectedSkill(){ const key=state.selected_skill; if(!skillRollAllowed(key)){ writeRollText(`=== НЕЛЬЗЯ БРОСИТЬ КАК НАВЫК ===\n\nНавык: ${skillMap[key].name}\n\n${skillRollBlockReason()}\n\nСейчас в руках:\n  Правая: ${(weaponMap[state.hands.right]||weaponMap.none).name}\n  Левая:  ${(weaponMap[state.hands.right]||weaponMap.none).hands===2?'занята оружием на оба слота':(weaponMap[state.hands.left]||weaponMap.none).name}`, 'RED: НЕЛЬЗЯ БРОСИТЬ', false); return; }
+ const apCost=skillApCost(key); const apBefore=consumeAp(apCost,'ROLL SKILL / MAGIC'); if(apBefore===null){ render(); return; }
+ const eff=effectiveValue(key), bonus=skillRollBonus(eff), statBonus=utilityStatBonus(key)+magicStatBonus(key), critHit=critSuccessThreshold(eff), critFail=critFailureThreshold(eff), sk=skillMap[key], distInfo=skillDistanceInfo(key,state.distance);
+ const roll=rand100(); let rollCrit=null, rawChance=0, chance=0;
+ if(distInfo.allowed){ rawChance=C.base_hit + bonus + statBonus - state.difficulty - distInfo.penalty; chance=clamp(rawChance,1,95,50); }
+ let result='', success=false;
+ if(chance<=0){
+   result='ПРОВАЛ: вне дистанции';
+ } else if(roll>=101-critFail){
+   result='КРИТИЧЕСКИЙ ПРОВАЛ';
+ } else if(roll>chance){
+   result='ПРОВАЛ';
+ } else {
+   success=true;
+   rollCrit=rand100();
+   result=rollCrit<=critHit?'КРИТИЧЕСКИЙ УСПЕХ':'УСПЕХ';
+ }
+ const magicNote=sk.cat==='МАГИЯ'?'\nMagic casts with any weapon or empty hands. Weapon damage/accuracy/AP do not apply. Range: optimal 30 / max 60 yd.':'';
+ const critLine=rollCrit===null?'  d100 CRIT:    не бросается (сначала нужен успех)':`  d100 CRIT:    ${rollCrit} / шанс ${critHit}%${rollCrit<=critHit?' -> CRIT':' -> обычный успех'}`;
+ const text=`=== БРОСОК НАВЫКА / МАГИИ v24 ===\n\nAP: -${apCost} (${Math.trunc(apBefore)} -> ${Math.trunc(state.current_ap)})\n\nПЕРСОНАЖ:\n  Навык:        ${sk.name}\n  Категория:    ${sk.cat}\n  Значение:     ${eff}%\n  Бонус навыка: +${bonus}  максимум +50\n  Бонус стата:  +${statBonus}  (utility IN / magic school stat)\n  Crit chance:  ${critHit}%  (отдельный d100 после успеха)\n  Crit MISS:    ${101-critFail}-100 на основном броске\n${magicNote}\n\nДИСТАНЦИЯ:\n  ${distInfo.text}\n\nРАСЧЁТ:\n  ${C.base_hit} + ${bonus} + stat ${statBonus} ${state.difficulty>=0?'- '+state.difficulty:'+ '+Math.abs(state.difficulty)} - ${distInfo.penalty} = ${rawChance}%\n  Итоговый шанс: ${chance}%\n\nКУБИКИ:\n  d100 HIT:     ${roll}\n${critLine}\n  Результат:    ${result}`;
+ writeRollText(text, success?'GREEN: УСПЕХ':'RED: ПРОВАЛ', success); render(); }
+
+function render(){ normalizeHands(); if($('selectedNameDisplay')) $('selectedNameDisplay').textContent=skillMap[state.selected_skill]?.name||''; $('levelView').textContent=state.level; $('difficultyView').textContent=state.difficulty; $('distanceView').textContent=state.distance; $('attrTotalText').textContent=`Очки характеристик: ${totalAttr()} / ${C.attr_total}`; updateAttrRows(); updateEquipGrid(); updateHandSelects(); updateSkillList(); updateSelectedSkillBox(); updateTargetPanel(); updateBars(); updateTargetZones(); updateSpellPanel(); updateDerivedBox(); }
+
+
+// ===== Exact desktop-v24 visual rendering overrides =====
+function updateEquipGrid(){
+  const g=$('equipGrid'); g.innerHTML='';
+  const halves=[DATA.equip_slots.slice(0,5),DATA.equip_slots.slice(5,10)];
+  halves.forEach((slots,hi)=>{
+    const half=document.createElement('div'); half.className='equipHalf';
+    half.innerHTML='<div class="equipHdr"><span>Слот</span><span>Физ</span><span>Маг</span></div>';
+    slots.forEach(slot=>{
+      const row=document.createElement('div'); row.className='equipRow';
+      row.innerHTML=`<span class="equipName">${slot.name}</span>
+      <button data-eq="${slot.key}" data-kind="physical" data-d="-1">-</button><span class="equipVal">${state.equipment.physical[slot.key]}</span><button data-eq="${slot.key}" data-kind="physical" data-d="1">+</button>
+      <button data-eq="${slot.key}" data-kind="magic" data-d="-1">-</button><span class="equipVal">${state.equipment.magic[slot.key]}</span><button data-eq="${slot.key}" data-kind="magic" data-d="1">+</button>`;
+      half.appendChild(row);
+    });
+    g.appendChild(half);
+  });
+  g.querySelectorAll('button[data-eq]').forEach(b=>b.onclick=()=>changeEquip(b.dataset.eq,b.dataset.kind,Number(b.dataset.d)));
+}
+function updateHandSelects(){
+  normalizeHands(); const r=$('rightHand'),l=$('leftHand');
+  const rightChoices=DATA.weapons.filter(w=>w.key!=='unarmed_virtual');
+  const leftChoices=[weaponMap.none,...DATA.weapons.filter(w=>w.key!=='unarmed_virtual'&&w.hands===1)];
+  const toLabel=w=>{ if(w.key==='none')return 'Пустая рука  [none]'; const hands=(w.skill==='wands'||w.skill==='explosives')&&w.hands===2?'1H/2S':(w.hands===2?'2S':'1S'); const range=w.range_kind==='melee'?`R${w.reach||0}`:(w.range_kind==='ranged'?`O${w.optimal||0}/M${w.max_range||0}`:'R-'); const [lo,hi]=weaponCatalogRange(w); return `${w.name} | ${skillMap[w.skill]?.name||'-'} | ${hands} | ${range} | ST${weaponRequiredStrength(w)} | DMG ${lo!==hi?lo+'-'+hi:lo}  [${w.key}]`; };
+  r.innerHTML=rightChoices.map(w=>`<option value="${w.key}">${toLabel(w)}</option>`).join('');
+  l.innerHTML=leftChoices.map(w=>`<option value="${w.key}">${toLabel(w)}</option>`).join('');
+  r.value=state.hands.right;l.value=state.hands.left;
+  r.onchange=()=>{state.hands.right=r.value;normalizeHands();render()};
+  l.onchange=()=>{state.hands.left=l.value;normalizeHands();render()};
+  const rw=weaponMap[state.hands.right]||weaponMap.none,lw=weaponMap[state.hands.left]||weaponMap.none;
+  $('weaponHint').textContent='';
+}
+function updateSkillList(){
+  const base=baseValues(), list=$('skillList'); list.innerHTML=''; let currentCat='';
+  DATA.skills.forEach(s=>{
+    if(s.cat!==currentCat){ currentCat=s.cat; const hdr=document.createElement('div'); hdr.className='skillCat'; hdr.textContent=`=== ${currentCat} ===`; list.appendChild(hdr); }
+    const eff=effectiveValue(s.key,base), raw=rawValue(s.key,base), inv=state.invested[s.key]||0, pen=conflictPenalty(s.key), tag=state.tags[s.key];
+    const row=document.createElement('div'); row.className='skillRow'+(state.selected_skill===s.key?' active':'');
+    if(s.cat==='МАГИЯ') row.innerHTML=`<span>${s.name}</span><span>${eff}%</span><span>raw ${raw}%${tag?' TAG':''}</span><span>+${inv}</span><span>-${pen}</span>`;
+    else row.innerHTML=`<span>${s.name}</span><span>${eff}%</span><span>+${inv}${tag?' TAG':''}</span><span></span><span></span>`;
+    row.onclick=()=>{state.selected_skill=s.key;render()}; list.appendChild(row);
+  });
+  $('skillPointsText').textContent=`SKILL POINTS: ${remainingSkillPoints()} / ${totalSkillPoints()}`;
+  $('tagInfo').textContent=`TAG: ${tagCount()} / ${C.tag_limit}`;
+}
+function updateSelectedSkillBox(){
+  const key=state.selected_skill,sk=skillMap[key],base=baseValues(),raw=rawValue(key,base),eff=effectiveValue(key,base),inv=state.invested[key]||0,pen=conflictPenalty(key,base);
+  const cb=conflictBreakdown(key,base);
+  const conflict=cb.parts.length
+    ? cb.parts.map(x=>`${skillMap[x.key]?.name||x.key} ${Math.round(x.weight*100)}% [${x.invested}${x.tag_bonus?'+TAG '+x.tag_bonus:''}]: -${Math.round(x.amount)}%`).join(', ') + ` | ИТОГО -${cb.total}%`
+    : 'нет';
+  $('selectedSkillBox').textContent=`Категория: ${sk.cat}\nОписание: ${sk.desc}\n\nБаза от характеристик: ${base[key]}%\nВложено очков: +${inv}\nTAG-бонус: ${state.tags[key]?'+10':'+0'}\nСырой уровень: ${raw}% / 100%\nНесовместимость: ${conflict}\nЭффективно: ${eff}% / 100%\n\nTAG-навыки: ${tagCount()} / 3\nОсталось очков навыков: ${remainingSkillPoints()}`;
+}
+function updateDerivedBox(){
+  const S=state.attributes.strength,A=state.attributes.agility,I=state.attributes.intellect,P=state.attributes.spirit,E=state.attributes.stamina;
+  const eqp=equipmentPhysicalTotal(),eqm=equipmentMagicTotal(),pen=heavyArmorRegenPenalty();
+  const hp=50+E*10,carry=25+S*10,melee=Math.floor(S/2),initiative=A+I,will=P*2+E,focus=I+P,poison=E*2+P,corruption=P*3+E;
+  $('equipSummary').textContent=`Сумма брони: физ ${eqp}, маг ${eqm}\nИтог: Dodge ${dodgeValue()}% / Armor ${armorValue()}% / Magic Avoid ${magicAvoidValue()}% / Ward ${magicWardValue()}%`;
+  $('descBox').textContent=DATA.attrs.map(a=>`${a.short} ${a.full}: ${a.desc}`).join('\n');
+  $('derivedBox').textContent=`HP:                    ${hp}\nEnergy / AP max:       ${maxAp()}  (fixed)\nEnergy regen / sec:    +${apRegenPerSecond()}  (6 + AG - armor penalty ${pen})\nCarry weight:          ${carry}\nMelee damage bonus:    +${melee}\nInitiative:            ${initiative}\nWill:                  ${will}\nMagic focus:           ${focus}\nPoison/plague resist:  ${poison}\nCorruption resist:     ${corruption}\n\nDodge:                 ${dodgeValue()}%  (5 + AG*2 - Armor//3)\nArmor:                 ${armorValue()}%\nMagic Avoid:           ${magicAvoidValue()}%  (5 + SP)\nMagic Ward:            ${magicWardValue()}%  (SP*2 + EN + magic armor)\n\nSkill points / level:  2 + floor(IN/4) = ${skillPointsPerLevel()}\nTotal skill points:    ${totalSkillPoints()}\nSpent skill points:    ${spentSkillPoints()}\nRemaining:             ${remainingSkillPoints()}`;
+}
+function updateTargetZones(){
+  const wrap=$('zoneCanvas'); wrap.querySelectorAll('.zone').forEach(z=>z.remove());
+  const cls={head:'head',eyes:'eyes',right_arm:'ra',left_arm:'la',torso:'torso',groin:'groin',right_leg:'rl',left_leg:'ll'};
+  DATA.body_targets.forEach(z=>{const b=document.createElement('button');b.className=`zone z-${cls[z.key]} ${state.selected_body_zone===z.key?'active':''}`;b.innerHTML=`<span class="zchance">${previewPrimaryHitChanceForZone(z.key)}%</span><span>${z.name}</span>`;b.onclick=()=>{state.selected_body_zone=z.key;render()};wrap.appendChild(b)});
+  const info=bodyMap[state.selected_body_zone];$('zoneStatus').textContent=`Selected: ${info.name} | HIT ${info.hit_mod>=0?'+':''}${info.hit_mod}% | Crit +${info.crit_bonus} | DMG x${info.damage_mult.toFixed(2)} | AP +${state.selected_body_zone==='torso'?0:C.body_target_ap_extra} | preview ${previewPrimaryHitChanceForZone(info.key)}%`;
+}
+
+
+
+// ===== Combat spell system =====
+const SPELLS=[
+  // Holy
+  {key:'holy_smite',school:'holy',name:'Smite',req:30,type:'damage',min:12,max:18,ap:26,acc:8,pen:0,crit:0,crit_mult:1.00,opt:30,range:60,note:'Надёжный базовый Holy-удар.'},
+  {key:'holy_flash_heal',school:'holy',name:'Flash Heal',req:30,type:'heal',min:14,max:20,ap:28,acc:10,pen:0,crit:0,crit_mult:1.00,opt:25,range:40,note:'Быстрое лечение союзника.'},
+  {key:'holy_shock',school:'holy',name:'Holy Shock',req:50,type:'damage',min:20,max:28,ap:32,acc:10,pen:10,crit:2,crit_mult:1.05,opt:30,range:60,note:'Быстрый удар с улучшенным пробитием.'},
+  {key:'holy_light',school:'holy',name:'Holy Light',req:50,type:'heal',min:24,max:34,ap:35,acc:6,pen:0,crit:2,crit_mult:1.00,opt:30,range:50,note:'Сильное одиночное лечение.'},
+  {key:'holy_fire',school:'holy',name:'Holy Fire',req:80,type:'damage',min:32,max:44,ap:42,acc:5,pen:16,crit:4,crit_mult:1.10,opt:35,range:70,note:'Тяжёлый Holy-спелл с хорошим PEN.'},
+  {key:'holy_divine_wrath',school:'holy',name:'Divine Wrath',req:100,type:'damage',min:48,max:64,ap:55,acc:8,pen:24,crit:6,crit_mult:1.15,opt:40,range:80,note:'Высший боевой Holy-спелл.'},
+
+  // Void
+  {key:'shadow_pain',school:'void',name:'Shadow Word: Pain',req:30,type:'damage',min:13,max:19,ap:25,acc:10,pen:0,crit:0,crit_mult:1.00,opt:30,range:60,note:'DoT упрощён до одного броска урона.'},
+  {key:'shadow_mind_blast',school:'void',name:'Mind Blast',req:50,type:'damage',min:22,max:31,ap:32,acc:8,pen:8,crit:2,crit_mult:1.05,opt:35,range:70,note:'Сильный прямой психический удар.'},
+  {key:'shadow_vampiric_touch',school:'void',name:'Vampiric Touch',req:80,type:'damage',min:32,max:42,ap:40,acc:5,pen:14,crit:3,crit_mult:1.10,opt:35,range:70,note:'Тяжёлый Void-урон; drain пока только flavor.'},
+  {key:'shadow_void_torrent',school:'void',name:'Void Torrent',req:100,type:'damage',min:48,max:62,ap:55,acc:5,pen:22,crit:6,crit_mult:1.15,opt:40,range:80,note:'Высший поток Void-энергии.'},
+
+  // Nature
+  {key:'nature_wrath',school:'nature',name:'Wrath',req:30,type:'damage',min:13,max:19,ap:25,acc:8,pen:0,crit:0,crit_mult:1.00,opt:30,range:60,note:'Базовый Nature-удар.'},
+  {key:'nature_healing_touch',school:'nature',name:'Healing Touch',req:30,type:'heal',min:16,max:23,ap:28,acc:8,pen:0,crit:0,crit_mult:1.00,opt:25,range:40,note:'Базовое природное лечение.'},
+  {key:'nature_lightning_bolt',school:'nature',name:'Lightning Bolt',req:50,type:'damage',min:22,max:30,ap:32,acc:8,pen:8,crit:2,crit_mult:1.05,opt:35,range:70,note:'Быстрый удар молнией.'},
+  {key:'nature_regrowth',school:'nature',name:'Regrowth',req:50,type:'heal',min:24,max:33,ap:34,acc:7,pen:0,crit:2,crit_mult:1.00,opt:30,range:50,note:'Сильное лечение; HoT пока включён в один roll.'},
+  {key:'nature_chain_lightning',school:'nature',name:'Chain Lightning',req:80,type:'damage',min:33,max:44,ap:43,acc:5,pen:12,crit:4,crit_mult:1.10,opt:35,range:70,note:'Сильная молния; цепные цели пока не симулируются.'},
+  {key:'nature_tranquility',school:'nature',name:'Tranquility',req:100,type:'heal',min:50,max:68,ap:55,acc:8,pen:0,crit:5,crit_mult:1.00,opt:30,range:60,note:'Высшее природное лечение.'},
+
+  // Necromancy
+  {key:'necro_death_coil',school:'necromancy',name:'Death Coil',req:30,type:'damage',min:14,max:20,ap:26,acc:7,pen:3,crit:0,crit_mult:1.00,opt:30,range:60,note:'Базовый некромантический снаряд.'},
+  {key:'necro_soul_reaper',school:'necromancy',name:'Soul Reaper',req:50,type:'damage',min:23,max:32,ap:34,acc:5,pen:10,crit:3,crit_mult:1.05,opt:25,range:50,note:'Удар по жизненной силе цели.'},
+  {key:'necro_corpse_explosion',school:'necromancy',name:'Corpse Explosion',req:80,type:'damage',min:36,max:48,ap:45,acc:0,pen:15,crit:3,crit_mult:1.10,opt:25,range:50,note:'AoE упрощён до одной основной цели.'},
+  {key:'necro_apocalypse',school:'necromancy',name:'Apocalypse',req:100,type:'damage',min:50,max:68,ap:58,acc:0,pen:24,crit:6,crit_mult:1.15,opt:35,range:70,note:'Высшая некромантическая атака.'},
+
+  // Arcane
+  {key:'arcane_blast',school:'arcane',name:'Arcane Blast',req:30,type:'damage',min:15,max:21,ap:26,acc:8,pen:4,crit:0,crit_mult:1.00,opt:30,range:60,note:'Базовый Arcane-выстрел.'},
+  {key:'arcane_missiles',school:'arcane',name:'Arcane Missiles',req:50,type:'damage',min:24,max:32,ap:34,acc:12,pen:4,crit:1,crit_mult:1.05,opt:35,range:70,note:'Серия missiles сейчас считается одним damage event.'},
+  {key:'arcane_barrage',school:'arcane',name:'Arcane Barrage',req:80,type:'damage',min:34,max:46,ap:42,acc:8,pen:15,crit:4,crit_mult:1.10,opt:40,range:80,note:'Мощный Arcane burst.'},
+  {key:'arcane_surge',school:'arcane',name:'Arcane Surge',req:100,type:'damage',min:52,max:70,ap:58,acc:5,pen:25,crit:6,crit_mult:1.15,opt:40,range:80,note:'Высший Arcane burst.'},
+
+  // Fel
+  {key:'fel_incinerate',school:'fel',name:'Incinerate',req:30,type:'damage',min:15,max:22,ap:27,acc:6,pen:5,crit:1,crit_mult:1.00,opt:30,range:60,note:'Базовый разрушительный Fel-каст.'},
+  {key:'fel_chaos_bolt',school:'fel',name:'Chaos Bolt',req:50,type:'damage',min:26,max:36,ap:38,acc:0,pen:18,crit:4,crit_mult:1.10,opt:35,range:70,note:'Медленнее, но хорошо пробивает Ward.'},
+  {key:'fel_hand_guldan',school:'fel',name:"Hand of Gul'dan",req:80,type:'damage',min:36,max:50,ap:46,acc:2,pen:16,crit:3,crit_mult:1.10,opt:35,range:70,note:'Тяжёлый демонический удар.'},
+  {key:'fel_cataclysm',school:'fel',name:'Cataclysm',req:100,type:'damage',min:55,max:75,ap:60,acc:0,pen:28,crit:5,crit_mult:1.15,opt:40,range:80,note:'Высший разрушительный Fel-спелл.'},
+
+  // Spirit
+  {key:'spirit_flame_shock',school:'spirit_magic',name:'Flame Shock',req:30,type:'damage',min:12,max:18,ap:24,acc:10,pen:0,crit:0,crit_mult:1.00,opt:30,range:60,note:'Базовый шаманский удар; DoT упрощён.'},
+  {key:'spirit_healing_wave',school:'spirit_magic',name:'Healing Wave',req:30,type:'heal',min:15,max:22,ap:28,acc:8,pen:0,crit:0,crit_mult:1.00,opt:30,range:50,note:'Базовое шаманское лечение.'},
+  {key:'spirit_lava_burst',school:'spirit_magic',name:'Lava Burst',req:50,type:'damage',min:24,max:34,ap:34,acc:6,pen:8,crit:4,crit_mult:1.08,opt:35,range:70,note:'Сильный burst с повышенным критом.'},
+  {key:'spirit_chain_heal',school:'spirit_magic',name:'Chain Heal',req:50,type:'heal',min:22,max:30,ap:35,acc:8,pen:0,crit:2,crit_mult:1.00,opt:30,range:60,note:'Цепное лечение; сейчас считается для одного союзника.'},
+  {key:'spirit_elemental_blast',school:'spirit_magic',name:'Elemental Blast',req:80,type:'damage',min:35,max:48,ap:44,acc:5,pen:16,crit:4,crit_mult:1.10,opt:40,range:80,note:'Тяжёлый стихийный удар.'},
+  {key:'spirit_ascendance',school:'spirit_magic',name:'Ascendance',req:100,type:'damage',min:52,max:70,ap:58,acc:7,pen:22,crit:6,crit_mult:1.15,opt:40,range:80,note:'Высшая шаманская атака.'},
+
+  // Decay
+  {key:'decay_wither',school:'decay',name:'Wither',req:30,type:'damage',min:13,max:20,ap:25,acc:8,pen:2,crit:0,crit_mult:1.00,opt:30,range:60,note:'Базовая магия увядания.'},
+  {key:'decay_death_decay',school:'decay',name:'Death and Decay',req:50,type:'damage',min:22,max:31,ap:34,acc:5,pen:10,crit:2,crit_mult:1.05,opt:30,range:60,note:'Зона разложения упрощена до одной цели.'},
+  {key:'decay_blight',school:'decay',name:'Blight',req:80,type:'damage',min:35,max:48,ap:44,acc:4,pen:16,crit:4,crit_mult:1.10,opt:35,range:70,note:'Тяжёлое разложение с хорошим PEN.'},
+  {key:'decay_rotstorm',school:'decay',name:'Rotstorm',req:100,type:'damage',min:50,max:68,ap:58,acc:2,pen:25,crit:6,crit_mult:1.15,opt:40,range:80,note:'Высшая магия Decay.'}
+];
+const spellMap=Object.fromEntries(SPELLS.map(s=>[s.key,s]));
+const MAGIC_SCHOOLS=DATA.skills.filter(s=>s.cat==='МАГИЯ').map(s=>({key:s.key,name:s.name}));
+
+function ensureSpellState(){
+  if(!state.selected_spell_school || !skillMap[state.selected_spell_school] || skillMap[state.selected_spell_school].cat!=='МАГИЯ') state.selected_spell_school='holy';
+  const eff=effectiveValue(state.selected_spell_school);
+  const candidates=SPELLS.filter(s=>s.school===state.selected_spell_school && eff>=s.req);
+  if(!state.selected_spell || !spellMap[state.selected_spell] || spellMap[state.selected_spell].school!==state.selected_spell_school || eff<spellMap[state.selected_spell].req){
+    state.selected_spell=candidates.length?candidates[0].key:null;
+  }
+}
+function updateSpellPanel(){
+  if(!$('spellSchool')||!$('spellSelect')) return;
+  ensureSpellState();
+  const schoolSel=$('spellSchool');
+  const schoolValue=state.selected_spell_school;
+  schoolSel.innerHTML=MAGIC_SCHOOLS.map(s=>`<option value="${s.key}">${s.name} — ${effectiveValue(s.key)}%</option>`).join('');
+  schoolSel.value=schoolValue;
+  schoolSel.onchange=()=>{state.selected_spell_school=schoolSel.value;state.selected_spell=null;updateSpellPanel();};
+  const eff=effectiveValue(state.selected_spell_school);
+  const spells=SPELLS.filter(s=>s.school===state.selected_spell_school);
+  const spellSel=$('spellSelect');
+  spellSel.innerHTML=spells.map(s=>`<option value="${s.key}" ${eff<s.req?'disabled':''}>${eff<s.req?'[LOCK] ':''}${s.name} — ${s.req}%</option>`).join('');
+  ensureSpellState();
+  if(state.selected_spell) spellSel.value=state.selected_spell;
+  spellSel.onchange=()=>{state.selected_spell=spellSel.value;updateSpellPanel();};
+  const sp=state.selected_spell?spellMap[state.selected_spell]:null;
+  const info=$('spellInfo');
+  if(!sp){
+    const next=spells.find(s=>eff<s.req);
+    info.textContent=`${skillMap[state.selected_spell_school].name}: ${eff}%\nНет доступных боевых спеллов.${next?` Следующий: ${next.name} при ${next.req}%.`:''}`;
+    return;
+  }
+  const power=sp.type==='heal'?`HEAL ${sp.min}-${sp.max}`:`DMG ${sp.min}-${sp.max} | PEN +${sp.pen}`;
+  info.textContent=`${sp.name} | ${skillMap[sp.school].name} ${eff}% | req ${sp.req}%\n${power} | AP ${spellApCost(sp)} | ACC +${sp.acc} | CRIT +${sp.crit}% | R ${sp.opt}/${sp.range}\n${sp.note}\nКнига: в будущем потребуется отдельное изучение; сейчас действует skill gate.`;
+}
+function spellApCost(sp){ return Math.max(10, sp.ap - Math.floor(state.attributes.spirit/3)); }
+function spellDistanceInfo(sp){
+  const d=clamp(state.distance,0,200,0);
+  if(d>sp.range) return {allowed:false,penalty:0,text:`${sp.name}: ${d} ярдов > max ${sp.range}. Цель вне дальности.`};
+  const penalty=Math.max(0,d-sp.opt);
+  return {allowed:true,penalty,text:`${sp.name}: optimal ${sp.opt}, max ${sp.range}, дистанция ${d}, штраф -${penalty}%.`};
+}
+function magicDamageStatBonus(school){ return magicStatBonus(school); }
+function rollMagic(){
+  ensureSpellState();
+  const sp=state.selected_spell?spellMap[state.selected_spell]:null;
+  if(!sp){ writeRollText('Нет доступного боевого спелла в выбранной школе. Подними навык школы.', 'СПЕЛЛ ЗАБЛОКИРОВАН', false); return; }
+  const eff=effectiveValue(sp.school);
+  if(eff<sp.req){ writeRollText(`${sp.name} требует ${sp.req}% ${skillMap[sp.school].name}. Сейчас: ${eff}%.`, 'СПЕЛЛ ЗАБЛОКИРОВАН', false); return; }
+  const apCost=spellApCost(sp), apBefore=consumeAp(apCost,'ROLL MAGIC'); if(apBefore===null){render();return;}
+  const skillBonus=skillRollBonus(eff), statBonus=magicStatBonus(sp.school), dist=spellDistanceInfo(sp);
+  const targetLoaded=!!state.target;
+  const avoid=(sp.type==='damage'&&targetLoaded)?targetMagicAvoidValue():0;
+  const ward=(sp.type==='damage'&&targetLoaded)?targetMagicWardValue():0;
+  let rawChance=0,chance=0;
+  if(dist.allowed){ rawChance=C.base_hit + skillBonus + statBonus + sp.acc - avoid - state.difficulty - dist.penalty; chance=clamp(rawChance,1,95,50); }
+  const hitRoll=rand100();
+  const critFail=critFailureThreshold(eff);
+  const critChance=clamp(critSuccessThreshold(eff)+sp.crit,1,25,1);
+  let critRoll=null,penRoll=null,penRaw=null,penChance=null;
+  let success=false,critical=false,result='',amount=0,baseRoll=0,reduction=null;
+  if(chance<=0){ result='ПРОВАЛ: вне дистанции'; }
+  else if(hitRoll>=101-critFail){ result='КРИТИЧЕСКИЙ ПРОВАЛ'; }
+  else if(hitRoll>chance){ result='ПРОМАХ'; }
+  else {
+    success=true; critRoll=rand100(); critical=critRoll<=critChance;
+    baseRoll=Math.floor(Math.random()*(sp.max-sp.min+1))+sp.min + magicDamageStatBonus(sp.school);
+    amount=baseRoll;
+    if(critical) amount=Math.max(1,Math.round(amount*(sp.type==='heal'?1.5:(C.crit_dmg_mult*sp.crit_mult))));
+    if(sp.type==='damage'&&targetLoaded){
+      penRaw=C.base_pen + skillBonus + statBonus + sp.pen - ward - state.difficulty;
+      penChance=clamp(penRaw,5,95,50); penRoll=rand100();
+      if(penRoll>penChance){ reduction=Math.floor(Math.random()*(C.nonpen_max-C.nonpen_min+1))+C.nonpen_min; amount=Math.round(amount*(100-reduction)/100); if(reduction<100&&baseRoll>0) amount=Math.max(1,amount); result=critical?'КРИТ + НЕПРОБИТИЕ':'ПОПАДАНИЕ + НЕПРОБИТИЕ'; }
+      else result=critical?'КРИТИЧЕСКОЕ ПОПАДАНИЕ':'ПОПАДАНИЕ + ПРОБИТИЕ';
+    } else result=critical?(sp.type==='heal'?'КРИТИЧЕСКОЕ ЛЕЧЕНИЕ':'КРИТИЧЕСКОЕ ПОПАДАНИЕ'):(sp.type==='heal'?'ЛЕЧЕНИЕ УСПЕШНО':'ПОПАДАНИЕ');
+  }
+  let hpLine='';
+  if(success&&sp.type==='damage'){
+    const [before,after]=amount>0?applyEnemyDamage(amount):[state.enemy_current_hp,state.enemy_current_hp];
+    hpLine=`\nENEMY HP: ${before} -> ${after} / ${state.enemy_max_hp}`;
+  }
+  const critLine=critRoll===null?'d100 CRIT: не бросается':`d100 CRIT: ${critRoll} / ${critChance}%${critical?' -> CRIT':''}`;
+  const penLine=sp.type==='heal'?'PEN: не используется':(targetLoaded?(penRoll===null?'PEN: не бросается':`d100 PEN: ${penRoll} / ${penChance}%  [${C.base_pen}+skill ${skillBonus}+stat ${statBonus}+spell ${sp.pen}-Ward ${ward}]${reduction!==null?`\nWard reduction: ${reduction}%`:''}`):'PEN: цель не загружена; Ward = 0');
+  const amountLine=success?(sp.type==='heal'?`HEAL: ${amount} HP союзнику`:`DMG: ${amount} HP`):`${sp.type==='heal'?'HEAL':'DMG'}: 0`;
+  const text=`=== ROLL MAGIC ===\n\nСПЕЛЛ: ${sp.name}\nШкола: ${skillMap[sp.school].name} ${eff}% (req ${sp.req}%)\nAP: -${apCost} (${Math.trunc(apBefore)} -> ${Math.trunc(state.current_ap)})\nТип: ${sp.type==='heal'?'HEAL':'DAMAGE'}\n${sp.note}\n\nДИСТАНЦИЯ:\n${dist.text}\n\nHIT:\n${C.base_hit} + skill ${skillBonus} + stat ${statBonus} + spell ACC ${sp.acc} - Magic Avoid ${avoid} ${state.difficulty>=0?'- '+state.difficulty:'+ '+Math.abs(state.difficulty)} - range ${dist.penalty} = ${rawChance}% -> ${chance}%\nd100 HIT: ${hitRoll}\n${critLine}\n\n${penLine}\n\nPOWER ROLL: ${baseRoll||'-'}\n${amountLine}\nРЕЗУЛЬТАТ: ${result}${hpLine}`;
+  writeRollText(text, success?(sp.type==='heal'?`${amount} HP HEAL`:`${amount} DMG`):'ПРОВАЛ', success);
+  render();
+}
+
+// Skills are utility/event checks only. Weapon skills use ATTACK; magic schools use ROLL MAGIC.
+function rollSelectedSkill(){
+  const key=state.selected_skill, sk=skillMap[key];
+  if(sk.cat==='МАГИЯ'){
+    writeRollText(`Навык ${sk.name} определяет доступные спеллы и силу магии.\n\nДля боевой магии выбери спелл слева и нажми ROLL MAGIC.`, 'ИСПОЛЬЗУЙ ROLL MAGIC', false); return;
+  }
+  if(!skillRollAllowed(key)){
+    writeRollText(`=== НЕЛЬЗЯ БРОСИТЬ КАК SKILL CHECK ===\n\nНавык: ${sk.name}\n\n${skillRollBlockReason()}\n\nОружейные навыки применяются через ATTACK.`, 'ИСПОЛЬЗУЙ ATTACK', false); return;
+  }
+  const apCost=skillApCost(key), apBefore=consumeAp(apCost,'ROLL SKILL'); if(apBefore===null){render();return;}
+  const eff=effectiveValue(key), bonus=skillRollBonus(eff), statBonus=utilityStatBonus(key), critChance=critSuccessThreshold(eff), critFail=critFailureThreshold(eff), dist=skillDistanceInfo(key,state.distance);
+  let rawChance=0,chance=0; if(dist.allowed){rawChance=C.base_hit+bonus+statBonus-state.difficulty-dist.penalty;chance=clamp(rawChance,1,95,50);}
+  const hitRoll=rand100(); let critRoll=null,critical=false,success=false,result='';
+  if(chance<=0) result='ПРОВАЛ: вне дистанции';
+  else if(hitRoll>=101-critFail) result='КРИТИЧЕСКИЙ ПРОВАЛ';
+  else if(hitRoll>chance) result='ПРОВАЛ';
+  else {success=true;critRoll=rand100();critical=critRoll<=critChance;result=critical?'КРИТИЧЕСКИЙ УСПЕХ':'УСПЕХ';}
+  let special='';
+  if(key==='alchemy_medicine'&&success){
+    let heal=8+Math.floor(Math.random()*7)+Math.floor(eff/5);
+    if(critical) heal=Math.round(heal*1.5);
+    special=`\n\nFIRST AID: союзник восстанавливает ${heal} HP.`;
+  }
+  const critLine=critRoll===null?'d100 CRIT: не бросается':`d100 CRIT: ${critRoll} / ${critChance}%${critical?' -> CRIT':''}`;
+  const text=`=== ROLL SKILL ===\n\nНавык: ${sk.name}\nКатегория: ${sk.cat}\nЗначение: ${eff}%\nAP: -${apCost} (${Math.trunc(apBefore)} -> ${Math.trunc(state.current_ap)})\nБонус навыка: +${bonus}\nБонус стата: +${statBonus}\n\nДИСТАНЦИЯ:\n${dist.text}\n\nРАСЧЁТ:\n${C.base_hit} + ${bonus} + stat ${statBonus} ${state.difficulty>=0?'- '+state.difficulty:'+ '+Math.abs(state.difficulty)} - ${dist.penalty} = ${rawChance}% -> ${chance}%\n\nd100 SKILL: ${hitRoll}\n${critLine}\nРезультат: ${result}${special}`;
+  writeRollText(text, success?result:'ПРОВАЛ', success); render();
+}
+
+
+// Same AP regeneration loop as the original Tkinter v24: once per second.
+function regenApTick(){
+  const max=maxAp();
+  if(state.current_ap < max){
+    state.current_ap=Math.min(max, state.current_ap + apRegenPerSecond());
+    // Update only resource readouts so the rest of the UI does not jump/re-render.
+    updateBars();
+  }
+}
+setInterval(regenApTick, 1000);
+
+
+const CHARACTER_PRESET_LABELS={
+  rogue:'Разбойник', warrior:'Воин', archer:'Стрелок', arcanist:'Арканист', paladin:'Паладин', shaman:'Шаман', necromancer:'Некромант', engineer:'Инженер'
+};
+const EXTRA_CHARACTER_PRESETS={
+  arcanist:{level:10,difficulty:0,distance:30,attributes:{strength:2,agility:5,intellect:10,spirit:8,stamina:5},equipment:{physical:{head:0,shoulders:0,chest:1,hands:0,legs:1,feet:0,back:0,offhand:0,trinket1:0,trinket2:0},magic:{head:2,shoulders:2,chest:5,hands:2,legs:3,feet:1,back:3,offhand:0,trinket1:2,trinket2:2}},invested:{arcane:24,wands:4,engineering:2},tags:{arcane:true,wands:true,engineering:true},selected_skill:'arcane',hands:{right:'expensive_wand',left:'none'},selected_body_zone:'torso'},
+  paladin:{level:10,difficulty:0,distance:0,attributes:{strength:8,agility:4,intellect:4,spirit:7,stamina:7},equipment:{physical:{head:3,shoulders:3,chest:6,hands:2,legs:5,feet:2,back:1,offhand:3,trinket1:0,trinket2:0},magic:{head:1,shoulders:1,chest:2,hands:1,legs:2,feet:1,back:1,offhand:3,trinket1:1,trinket2:1}},invested:{one_handed_maces:10,holy:18,survival:2},tags:{one_handed_maces:true,holy:true,survival:true},selected_skill:'holy',hands:{right:'expensive_mace',left:'none'},selected_body_zone:'torso'},
+  shaman:{level:10,difficulty:0,distance:20,attributes:{strength:5,agility:5,intellect:5,spirit:10,stamina:5},equipment:{physical:{head:1,shoulders:1,chest:2,hands:1,legs:2,feet:1,back:1,offhand:0,trinket1:0,trinket2:0},magic:{head:2,shoulders:2,chest:4,hands:2,legs:3,feet:1,back:2,offhand:0,trinket1:2,trinket2:2}},invested:{spirit_magic:22,nature:6,one_handed_maces:2},tags:{spirit_magic:true,nature:true,one_handed_maces:true},selected_skill:'spirit_magic',hands:{right:'iron_mace',left:'none'},selected_body_zone:'torso'},
+  necromancer:{level:10,difficulty:0,distance:30,attributes:{strength:2,agility:4,intellect:9,spirit:7,stamina:8},equipment:{physical:{head:0,shoulders:0,chest:1,hands:0,legs:1,feet:0,back:1,offhand:0,trinket1:0,trinket2:0},magic:{head:2,shoulders:1,chest:4,hands:1,legs:3,feet:1,back:3,offhand:0,trinket1:2,trinket2:2}},invested:{necromancy:24,void:4,alchemy_medicine:2},tags:{necromancy:true,void:true,alchemy_medicine:true},selected_skill:'necromancy',hands:{right:'apprentice_wand',left:'none'},selected_body_zone:'torso'},
+  engineer:{level:10,difficulty:0,distance:15,attributes:{strength:4,agility:6,intellect:10,spirit:3,stamina:7},equipment:{physical:{head:1,shoulders:1,chest:3,hands:2,legs:2,feet:1,back:0,offhand:0,trinket1:0,trinket2:0},magic:{head:0,shoulders:0,chest:1,hands:0,legs:0,feet:0,back:0,offhand:0,trinket1:0,trinket2:0}},invested:{engineering:20,guns:8,explosives:2},tags:{engineering:true,guns:true,explosives:true},selected_skill:'engineering',hands:{right:'dwarven_rifle',left:'none'},selected_body_zone:'torso'}
+};
+function normalizePresetData(src){
+  const p=deepClone(src||{}); const blankEq={physical:{},magic:{}}; DATA.equip_slots.forEach(s=>{blankEq.physical[s.key]=0;blankEq.magic[s.key]=0;});
+  p.equipment=p.equipment||blankEq; p.equipment.physical={...blankEq.physical,...(p.equipment.physical||{})}; p.equipment.magic={...blankEq.magic,...(p.equipment.magic||{})};
+  const inv={},tags={}; DATA.skills.forEach(s=>{inv[s.key]=0;tags[s.key]=false;}); p.invested={...inv,...(p.invested||{})}; p.tags={...tags,...(p.tags||{})}; return p;
+}
+const CHARACTER_PRESET_ATTRIBUTES={"rogue":{"strength":5,"agility":10,"intellect":8,"spirit":1,"stamina":6},"warrior":{"strength":10,"agility":8,"intellect":1,"spirit":1,"stamina":10},"archer":{"strength":5,"agility":10,"intellect":5,"spirit":6,"stamina":4},"arcanist":{"strength":1,"agility":5,"intellect":10,"spirit":6,"stamina":8},"paladin":{"strength":9,"agility":3,"intellect":2,"spirit":7,"stamina":9},"shaman":{"strength":5,"agility":4,"intellect":3,"spirit":10,"stamina":8},"necromancer":{"strength":1,"agility":4,"intellect":10,"spirit":5,"stamina":10},"engineer":{"strength":4,"agility":7,"intellect":10,"spirit":1,"stamina":8}};
+const CHARACTER_PRESET_TAGS={
+  rogue:['daggers','stealth','stealing'],
+  warrior:['two_handed_swords','one_handed_swords','unarmed'],
+  archer:['bows','stealth','survival'],
+  arcanist:['arcane','wands','staves'],
+  paladin:['holy','one_handed_maces','two_handed_maces'],
+  shaman:['spirit_magic','nature','one_handed_maces'],
+  necromancer:['necromancy','void','alchemy_medicine'],
+  engineer:['engineering','guns','explosives']
+};
+function characterPresetData(key){
+  let src=null;
+  if(key==='rogue') src=DATA.presets.rogue;
+  else if(key==='warrior') src=DATA.presets.warrior;
+  else if(key==='archer') src=DATA.presets.archer;
+  else if(key==='arcanist') src=EXTRA_CHARACTER_PRESETS.arcanist;
+  else src=EXTRA_CHARACTER_PRESETS[key];
+  const p=normalizePresetData(src);
+  if(!p) return null;
+  // Use a deliberate level-1 archetype statline instead of inheriting old test-preset stats.
+  if(CHARACTER_PRESET_ATTRIBUTES[key]) p.attributes={...CHARACTER_PRESET_ATTRIBUTES[key]};
+  // Presets are archetype starting builds, not pre-levelled characters.
+  p.level=1;
+  p.difficulty=0;
+  // Do not give a level-1 preset impossible pre-spent skill points.
+  DATA.skills.forEach(s=>{p.invested[s.key]=0; p.tags[s.key]=false;});
+  (CHARACTER_PRESET_TAGS[key]||[]).forEach(s=>{if(s in p.tags)p.tags[s]=true;});
+  return p;
+}
+function applyCharacterPreset(key){
+  const p=characterPresetData(key); if(!p) return; const savedTarget=state.target, savedEnemyMax=state.enemy_max_hp, savedEnemyCur=state.enemy_current_hp;
+  state.level=clamp(p.level??1,C.level_min,C.level_max,1); state.difficulty=clamp(p.difficulty??0,-50,50,0); state.distance=clamp(p.distance??0,0,200,0);
+  state.attributes={...state.attributes,...p.attributes}; state.equipment=deepClone(p.equipment); state.invested=deepClone(p.invested); state.tags=deepClone(p.tags); state.selected_skill=skillMap[p.selected_skill]?p.selected_skill:DATA.skills[0].key; state.hands={right:p.hands?.right||'none',left:p.hands?.left||'none'}; state.selected_body_zone=bodyMap[p.selected_body_zone]?p.selected_body_zone:'torso'; state.current_ap=maxAp();
+  state.target=savedTarget; state.enemy_max_hp=savedEnemyMax; state.enemy_current_hp=savedEnemyCur; normalizeHands(); render(); writeRollText(`Пресет персонажа: ${CHARACTER_PRESET_LABELS[key]}.`, `PRESET: ${CHARACTER_PRESET_LABELS[key]}`, true);
+}
+const TARGET_PRESETS={
+  dog:{name:'Собака',level:1,attributes:{strength:5,agility:10,intellect:1,spirit:5,stamina:6},physical:0,magic:0},
+  skeleton:{name:'Скелет',level:2,attributes:{strength:6,agility:5,intellect:1,spirit:2,stamina:5},physical:10,magic:2},
+  bandit:{name:'Разбойник',level:3,attributes:{strength:5,agility:7,intellect:3,spirit:3,stamina:5},physical:7,magic:0},
+  soldier:{name:'Солдат',level:5,attributes:{strength:7,agility:5,intellect:4,spirit:4,stamina:8},physical:18,magic:3},
+  warlock:{name:'Колдун',level:6,attributes:{strength:2,agility:4,intellect:10,spirit:9,stamina:5},physical:2,magic:23},
+  ogre:{name:'Огр',level:7,attributes:{strength:10,agility:3,intellect:2,spirit:5,stamina:10},physical:13,magic:0},
+  elemental:{name:'Элементаль',level:8,attributes:{strength:8,agility:4,intellect:3,spirit:10,stamina:10},physical:8,magic:24},
+  knight:{name:'Рыцарь',level:8,attributes:{strength:9,agility:4,intellect:4,spirit:5,stamina:10},physical:28,magic:6},
+  paladin:{name:'Паладин',level:10,attributes:{strength:9,agility:4,intellect:5,spirit:8,stamina:10},physical:32,magic:16}
+};
+function simpleTargetFromPreset(key){
+  const p=TARGET_PRESETS[key]; if(!p) return null; const phys={},magic={}; DATA.equip_slots.forEach(s=>{phys[s.key]=0;magic[s.key]=0;});
+  const distribute=(obj,total)=>{const order=['chest','legs','head','shoulders','hands','feet','back','offhand','trinket1','trinket2']; let left=total; for(const k of order){if(left<=0)break; const n=Math.min(left,k==='chest'?6:k==='legs'?5:3); obj[k]+=n; left-=n;}}; distribute(phys,p.physical); distribute(magic,p.magic);
+  return {version:'24-body-targeting-target-preset',preset_name:p.name,level:p.level,attributes:deepClone(p.attributes),equipment:{physical:phys,magic:magic},invested:{},tags:{},hands:{right:'none',left:'none'},selected_body_zone:'torso'};
+}
+function applyTargetPreset(key){ const data=simpleTargetFromPreset(key); if(!data) return; loadTargetFromData(data, `${TARGET_PRESETS[key].name} [preset]`); writeRollText(`Цель загружена из пресета: ${TARGET_PRESETS[key].name}.`, `TARGET: ${TARGET_PRESETS[key].name}`, true); }
+function populatePresets(){
+  const cs=$('charPreset'); cs.innerHTML=Object.entries(CHARACTER_PRESET_LABELS).map(([k,v])=>`<option value="${k}">${v}</option>`).join('');
+  const ts=$('targetPreset'); ts.innerHTML=Object.entries(TARGET_PRESETS).map(([k,v])=>`<option value="${k}">${v.name} — ур. ${v.level}</option>`).join('');
+}
+
+// events
+$('levelMinus').onclick=()=>changeLevel(-1); $('levelPlus').onclick=()=>changeLevel(1);
+document.querySelectorAll('[data-sdelta]').forEach(b=>b.onclick=()=>changeSelectedSkill(Number(b.dataset.sdelta)));
+$('tagBtn').onclick=toggleTagSelected;
+$('applyCharPresetBtn').onclick=()=>applyCharacterPreset($('charPreset').value);
+$('applyTargetPresetBtn').onclick=()=>applyTargetPreset($('targetPreset').value);
+$('diffM10').onclick=()=>{state.difficulty=clamp(state.difficulty-10,-50,50,state.difficulty); render();}; $('diffM1').onclick=()=>{state.difficulty=clamp(state.difficulty-1,-50,50,state.difficulty); render();}; $('diffP1').onclick=()=>{state.difficulty=clamp(state.difficulty+1,-50,50,state.difficulty); render();}; $('diffP10').onclick=()=>{state.difficulty=clamp(state.difficulty+10,-50,50,state.difficulty); render();};
+$('distM10').onclick=()=>{state.distance=clamp(state.distance-10,0,200,state.distance); render();}; $('distM1').onclick=()=>{state.distance=clamp(state.distance-1,0,200,state.distance); render();}; $('distP1').onclick=()=>{state.distance=clamp(state.distance+1,0,200,state.distance); render();}; $('distP10').onclick=()=>{state.distance=clamp(state.distance+10,0,200,state.distance); render();};
+$('resetTargetHpBtn').onclick=()=>{ if(state.target) setEnemyHpFromTarget(); else {state.enemy_max_hp=0; state.enemy_current_hp=0;} render(); };
+$('attackBtn').onclick=rollAttack; $('rollMagicBtn').onclick=rollMagic; $('rollSkillBtn').onclick=rollSelectedSkill;
+$('clearTargetBtn').onclick=()=>{ clearTarget(); writeRollText('Цель очищена.', 'STATUS: TARGET CLEARED', null); };
+$('loadTargetBtn').onclick=()=>$('targetFile').click(); $('targetFile').addEventListener('change', async e=>{const f=e.target.files[0]; if(!f) return; try{ loadTargetFromData(JSON.parse(await f.text()), f.name); } catch(err){ alert(err.message); } e.target.value=''; });
+$('saveStateBtn').onclick=()=>{ const blob=new Blob([JSON.stringify(stateSnapshot(),null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='rollboy3000_build.json'; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),1000); };
+$('loadStateBtn').onclick=()=>$('stateFile').click(); $('stateFile').addEventListener('change', async e=>{ const f=e.target.files[0]; if(!f) return; try{ applyState(JSON.parse(await f.text())); writeRollText('Сохранение загружено.', 'STATUS: SAVE LOADED', true);} catch(err){ alert(err.message);} e.target.value=''; });
+$('resetBtn').onclick=()=>{ if(!confirm('Сбросить все параметры Roll-Boy 3000?')) return; initState(); render(); writeRollText('Система сброшена.', 'STATUS: RESET', null);} ;
+
+// quick load preset from hash if needed; default warrior buttons can be later extended.
+function applyPreset(name){ if(DATA.presets[name]) applyState(DATA.presets[name]); }
+window.applyRollboyPreset=applyPreset;
+populatePresets();
+writeRollText('', 'STATUS: —', null);
+render();
+</script></body></html>
