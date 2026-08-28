@@ -1,9 +1,7 @@
 name: Unpack Roll-Boy source
 
 on:
-  push:
-    paths:
-      - '.github/workflows/unpack.yml'
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -23,6 +21,7 @@ jobs:
 
           Browser version of Roll-Boy 3000. The application source is directly readable in `index.html`.
           EOF
+          rm -f .github/workflows/unpack.yml
       - name: Commit readable source
         shell: bash
         run: |
