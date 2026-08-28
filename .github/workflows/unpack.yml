@@ -1,0 +1,35 @@
+name: Unpack Roll-Boy source
+
+on:
+  push:
+    paths:
+      - '.github/workflows/unpack.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  unpack:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Replace packed loader with readable source
+        shell: bash
+        run: |
+          cat part*.txt | base64 -d | gzip -d > index.html
+          rm -f part*.txt
+          cat > README.md <<'EOF'
+          # Roll-Boy 3000
+
+          Browser version of Roll-Boy 3000. The application source is directly readable in `index.html`.
+          EOF
+      - name: Commit readable source
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if ! git diff --cached --quiet; then
+            git commit -m "Replace packed loader with readable Roll-Boy source"
+            git push
+          fi
